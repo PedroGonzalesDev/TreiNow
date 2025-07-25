@@ -17,9 +17,9 @@ public class UserEntity {
     private String password;
     private Long phone;
     private Long identityNumber;
-    @OneToOne
-    @Column(name = "address_id")
-    private AddressEntity AddressId;
+//    @OneToOne
+//    @Column(name = "address_id")
+    private Long AddressId;
     private Long roleId;
     private Boolean isActive;
 
