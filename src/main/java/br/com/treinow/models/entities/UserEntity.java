@@ -1,5 +1,6 @@
 package br.com.treinow.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class UserEntity {
     private UUID id;
     private String name;
     private String email;
+    @JsonIgnore
     private String password;
     private Long phone;
     private Long identityNumber;

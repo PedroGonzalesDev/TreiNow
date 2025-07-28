@@ -9,8 +9,6 @@ public record UserDto(
     String name,
     @NotBlank
     String email,
-    @NotBlank
-    String password,
     @NotNull
     Long phone,
     Long identityNumber,
