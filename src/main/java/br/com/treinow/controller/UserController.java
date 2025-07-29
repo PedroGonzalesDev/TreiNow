@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneUser(@PathVariable(value="id") Long id){
+    public ResponseEntity<Object> getOneUser(@PathVariable(value="id") UUID id){
         return userService.findById(id).<ResponseEntity<Object>>map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found."));
     }
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long id,
+    public ResponseEntity<Object> updateUser(@PathVariable UUID id,
                                              @RequestBody @Valid UserDto userDto) {
         try{
             var userUpdated = userService.updateUser(id, userDto);
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable UUID id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.status(HttpStatus.OK).body("User deleted sucessfully");

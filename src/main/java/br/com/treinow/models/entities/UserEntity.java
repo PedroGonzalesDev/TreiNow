@@ -14,12 +14,10 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "BIGINT")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     private String name;
     private String email;
-    @Column(nullable = false)
     private String password;
     private Long phone;
     private Long identityNumber;
