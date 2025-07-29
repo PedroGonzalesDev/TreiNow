@@ -1,6 +1,7 @@
 package br.com.treinow.controller;
 
 import br.com.treinow.dtos.UserDto;
+import br.com.treinow.dtos.UserResponseDto;
 import br.com.treinow.models.entities.UserEntity;
 import br.com.treinow.service.UserService;
 import jakarta.validation.Valid;
@@ -31,13 +32,20 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneUser(@PathVariable(value="id") UUID id){
+    public ResponseEntity<Object> getOneUser(@PathVariable(value="id") Long id){
         return userService.findById(id).<ResponseEntity<Object>>map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found."));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResponseDto>> searchUsers(@RequestParam String name){
+        List<UserEntity> users = userService.findByName(name);
+        List<UserResponseDto> response = users.stream().map(user -> new UserResponseDto(user.getId(), user.getName(), user.getEmail())).toList();
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable UUID id,
+    public ResponseEntity<Object> updateUser(@PathVariable Long id,
                                              @RequestBody @Valid UserDto userDto) {
         try{
             var userUpdated = userService.updateUser(id, userDto);
@@ -48,7 +56,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.status(HttpStatus.OK).body("User deleted sucessfully");

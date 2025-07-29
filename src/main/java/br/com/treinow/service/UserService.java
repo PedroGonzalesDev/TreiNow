@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -20,7 +19,7 @@ public class UserService {
 
     public UserEntity createUser(@Valid UserDto userDto){
         var userEntity = new UserEntity();
-        BeanUtils.copyProperties(userDto, userEntity);
+        BeanUtils.copyProperties(userDto, userEntity, "id");
         return userRepository.save(userEntity);
     }
 
@@ -28,17 +27,21 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<UserEntity> findById(UUID id){
+    public Optional<UserEntity> findById(Long id){
         return userRepository.findById(id);
     }
 
-    public UserEntity updateUser(UUID id, @Valid UserDto userDto){
+    public List<UserEntity> findByName(String name){
+        return userRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public UserEntity updateUser(Long id, @Valid UserDto userDto){
         var user = userRepository.findById(id).orElseThrow();
         BeanUtils.copyProperties(userDto, user, "id");
         return userRepository.save(user);
     }
 
-    public void deleteUser (UUID id){
+    public void deleteUser (Long id){
         var user = userRepository.findById(id).orElseThrow();
         userRepository.delete(user);
     }
