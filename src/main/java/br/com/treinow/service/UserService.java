@@ -21,6 +21,10 @@ public class UserService {
     public UserEntity createUser(@Valid UserDto userDto){
         var userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
+        if (userEntity .getIsActive() == null) {
+            userEntity.setIsActive(true);
+        }
+
         return userRepository.save(userEntity);
     }
 
