@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.UUID;
 
@@ -18,18 +20,25 @@ public class UserEntity {
     private UUID id;
     private String name;
     private String email;
+    @JsonIgnore
     private String password;
-    private Long phone;
-    private Long identityNumber;
-//    @OneToOne
-//    @Column(name = "address_id")
+    @CPF
+    @Column(unique = true, length = 14)
+    private String cpf;
+    private String phone;
     private Long addressId;
     private Long roleId;
-    private Boolean isActive;
-
-    //Date time in case of calculations
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private String createdAt;
     private String lastLogin;
+    @Column(nullable = false)
+    private Boolean isActive = true;
+    private void setDefaultActive(){
+        if(this.isActive == null){
+            this.isActive = true;
+        }
+    }
 
 
 
