@@ -20,15 +20,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping  //@PostMappin define que é um Post/Create | /users define a URI
-    public ResponseEntity<UserEntity> createUser(@RequestBody @Valid UserDto userDto){
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserEntity createUser(@RequestBody @Valid UserDto userDto){
         var createdUser = userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        return createdUser;
 
     }
     @GetMapping
-    public ResponseEntity<List<UserEntity>> getAllUsers(){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserEntity> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
