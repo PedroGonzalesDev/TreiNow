@@ -50,6 +50,6 @@ Sinta-se à vontade para abrir **issues** ou enviar **pull requests**. Qualquer 
 
 **Pedro Gonzales**  
 Desenvolvedor Java Jr em formação  
-Contato: [LinkedIn](https://www.linkedin.com/) (adicione seu link real aqui)
+Contato: [LinkedIn](https://www.linkedin.com/in/pedro-gonzales-667a4a173)
 
 ---
