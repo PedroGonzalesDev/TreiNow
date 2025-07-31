@@ -21,7 +21,6 @@ public record UserDto(
     String cpf,
     @NotBlank(message = "Phone is required")
     String phone,
-    Long identityNumber,
     Long addressId,
     @NotNull(message = "Select the role is required to continue")
     Long roleId,
