@@ -18,6 +18,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    //Regra de negocio metodo POST - cria usuario
     public UserEntity createUser(@Valid UserDto userDto){
         var userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
@@ -28,24 +29,29 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
+    //Regra de negocio metodo GET ALL - Puxa todos os usuarios
     public List<UserEntity> getAllUsers(){
         return userRepository.findAll();
     }
 
+    //Regra de negocio metodo GET POR ID - Puxa o usuario do ID selecionado
     public Optional<UserEntity> findById(UUID id){
         return userRepository.findById(id);
     }
 
+    //Regra de negocio metodo GET por NOME - puxa o usuario pelo nome selecionado
     public List<UserEntity> findByName(String name){
         return userRepository.findByNameContainingIgnoreCase(name);
     }
 
+    //Regra de negocio metodo UPDATE usuario - Atualiza campo desejado do usuario
     public UserEntity updateUser(UUID id, @Valid UserDto userDto){
         var user = userRepository.findById(id).orElseThrow();
         BeanUtils.copyProperties(userDto, user, "id");
         return userRepository.save(user);
     }
 
+    //Regra de negocio metodo DELETE - dele o usuario do ID selecionado
     public void deleteUser (UUID id){
         var user = userRepository.findById(id).orElseThrow();
         userRepository.delete(user);

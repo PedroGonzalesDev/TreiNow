@@ -20,31 +20,31 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping  //@PostMappin define que é um Post/Create | /users define a URI
+    @PostMapping  //Metodo post - Cadastra usuario
     public ResponseEntity<UserEntity> createUser(@RequestBody @Valid UserDto userDto){
         var createdUser = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
 
     }
-    @GetMapping
+    @GetMapping //Metodo Get, puxa todos os usuarios
     public ResponseEntity<List<UserEntity>> getAllUsers(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneUser(@PathVariable(value="id") UUID id){
+    @GetMapping("/{id}") //Metodo get by id, puxa o usuarios de ID selecionado
+    public ResponseEntity<Object> getUserById(@PathVariable(value="id") UUID id){
         return userService.findById(id).<ResponseEntity<Object>>map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found."));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search") //Metodo get by name, puxa os usuarios pelo nome
     public ResponseEntity<List<UserResponseDto>> searchUsers(@RequestParam String name){
         List<UserEntity> users = userService.findByName(name);
         List<UserResponseDto> response = users.stream().map(user -> new UserResponseDto(user.getId(), user.getName(), user.getEmail())).toList();
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") //Metodo Update, atualiza o usuario enviando os dados obrigatorios no json
     public ResponseEntity<Object> updateUser(@PathVariable UUID id,
                                              @RequestBody @Valid UserDto userDto) {
         try{
@@ -55,7 +55,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") //Metodo delete, deleta o usuario de id selecionado
     public ResponseEntity<Object> deleteUser(@PathVariable UUID id) {
         try {
             userService.deleteUser(id);
