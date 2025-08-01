@@ -20,8 +20,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)//Metodo post - Cadastra usuario
+    public UserEntity createUser(@RequestBody @Valid UserDto userDto){
+        var createdUser = userService.createUser(userDto);
+        return createdUser;
+
+    }
     public UserEntity createUser(@RequestBody @Valid UserDto userDto){
         var createdUser = userService.createUser(userDto);
         return createdUser;
