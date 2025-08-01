@@ -20,15 +20,17 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping  //Metodo post - Cadastra usuario
-    public ResponseEntity<UserEntity> createUser(@RequestBody @Valid UserDto userDto){
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)//Metodo post - Cadastra usuario
+    public UserEntity createUser(@RequestBody @Valid UserDto userDto){
         var createdUser = userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        return createdUser;
 
     }
-    @GetMapping //Metodo Get, puxa todos os usuarios
-    public ResponseEntity<List<UserEntity>> getAllUsers(){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)//Metodo Get, puxa todos os usuarios
+    public List<UserEntity> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @GetMapping("/{id}") //Metodo get by id, puxa o usuarios de ID selecionado
