@@ -2,6 +2,7 @@ package br.com.treinow.controller;
 
 
 import br.com.treinow.dtos.MemberDto;
+import br.com.treinow.dtos.MemberResponseDto;
 import br.com.treinow.dtos.UserDto;
 import br.com.treinow.models.entities.MemberEntity;
 import br.com.treinow.service.MemberService;
@@ -35,13 +36,13 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(memberService.getAllMembers());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") //Puxa membro pelo id
     public ResponseEntity<Object> getMemberById(@PathVariable(value = "id") UUID id){
         return memberService.findById(id).<ResponseEntity<Object>>map(ResponseEntity::ok).
                 orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found"));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") //Atualiza dados da entidade membro
     public ResponseEntity<Object> updateMember(@PathVariable UUID id,
                                              @RequestBody @Valid MemberDto memberDto) {
         try {
@@ -51,7 +52,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found");
         }
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") //Deleta membro por id
     public ResponseEntity<Object> deleteMember(@PathVariable UUID id){
         try{
             memberService.deleteMember(id);

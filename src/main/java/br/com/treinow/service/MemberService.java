@@ -35,9 +35,6 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
-//    public List<MemberEntity> findByName(String name){
-//        return memberRepository.findByNameContainingIgnoreCase(name);
-//    }
     public MemberEntity updateMember(UUID id, @Valid MemberDto memberDto){
         var member = memberRepository.findById(id).orElseThrow();
         BeanUtils.copyProperties(memberDto, member, "id");
