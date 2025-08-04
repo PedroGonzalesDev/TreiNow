@@ -13,7 +13,10 @@ public class MembershipEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
-    private String durationType; //Days, months, years
+    private String durationType;
+    private String description;
     private Long duration;
+    private Double price;
+
 
 }
