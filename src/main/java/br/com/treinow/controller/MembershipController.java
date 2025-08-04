@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Member;
+import java.util.List;
+
 @RestController
 @RequestMapping("/membership")
 public class MembershipController {
@@ -21,6 +24,12 @@ public class MembershipController {
     public MembershipEntity createMembership(@RequestBody @Valid MembershipDto membershipDto){
         var createdMembership= membershipService.createMembership(membershipDto);
         return createdMembership;
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<MembershipEntity> getAllMembership(){
+        return membershipService.getAllMembership();
     }
     
 }
