@@ -6,11 +6,8 @@ import br.com.treinow.repositories.jpa.MembershipRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import java.lang.reflect.Member;
 import java.util.List;
 import java.util.UUID;
 

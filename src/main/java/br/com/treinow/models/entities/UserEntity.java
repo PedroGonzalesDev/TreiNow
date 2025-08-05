@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.UUID;
@@ -31,6 +32,8 @@ public class UserEntity {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private String createdAt;
+    @UpdateTimestamp
+    @Column(nullable = false)
     private String lastLogin;
     @Column(nullable = false)
     private Boolean isActive = true;
