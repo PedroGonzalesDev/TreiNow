@@ -8,6 +8,7 @@ import br.com.treinow.service.AddressService;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,13 @@ public class AddressController {
     public List<AddressEntity> getAllAddress(){
         return addressService.getAllAddress();
     }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getAddressById(@PathVariable(value = "id") UUID id){
+        return addressService.findById(id).<ResponseEntity<Object>>map(ResponseEntity::ok).
+                orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found please verify the ID"));
+    }
+
 
     @GetMapping("/search")
     public ResponseEntity<Object> getAddressByStreet(@RequestParam String street){

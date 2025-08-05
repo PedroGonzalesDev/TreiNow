@@ -3,6 +3,8 @@ package br.com.treinow.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.UUID;
 
@@ -14,11 +16,13 @@ public class WorkoutEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
-    private Long workoutExerciseId;
+    private UUID workoutExerciseId;
     private String observation;
-
-    //Date time in case of calculations
     private String createdBy;
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private String createdAt;
+    @UpdateTimestamp
+    @Column(nullable = false)
     private String lastUpdateAt;
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,6 +26,10 @@ public class AddressService {
     
     public List<AddressEntity> getAllAddress(){
         return addressRepository.findAll();
+    }
+
+    public Optional<AddressEntity> findById(UUID id){
+        return addressRepository.findById(id);
     }
 
     public List<AddressEntity> findByStreet(String street){
