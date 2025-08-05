@@ -32,8 +32,6 @@ public class UserEntity {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private String createdAt;
-    @UpdateTimestamp
-    @Column(nullable = false)
     private String lastLogin;
     @Column(nullable = false)
     private Boolean isActive = true;
