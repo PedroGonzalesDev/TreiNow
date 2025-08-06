@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "muscle_group")
 public class MuscleGroupEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
