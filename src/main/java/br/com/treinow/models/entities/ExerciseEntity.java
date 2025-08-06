@@ -14,8 +14,8 @@ public class ExerciseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
-    private Long exerciseCategoryId;
-    private Long muscleGroupId;
+    private UUID exerciseCategoryId;
+    private UUID muscleGroupId;
     private Boolean isPrimary;
 
 }
