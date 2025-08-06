@@ -6,14 +6,11 @@ import br.com.treinow.dtos.AddressResponseDto;
 import br.com.treinow.models.entities.AddressEntity;
 import br.com.treinow.service.AddressService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLTransactionRollbackException;
 import java.util.List;
 import java.util.UUID;
 

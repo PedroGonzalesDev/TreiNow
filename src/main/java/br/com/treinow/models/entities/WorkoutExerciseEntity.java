@@ -14,7 +14,7 @@ public class WorkoutExerciseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private Long exerciseId;
+    private UUID exerciseId;
     private Long sets;
     private Long repetitions;
     private Long weight;
