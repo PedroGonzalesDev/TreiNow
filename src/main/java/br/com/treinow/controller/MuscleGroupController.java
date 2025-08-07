@@ -2,16 +2,15 @@ package br.com.treinow.controller;
 
 import br.com.treinow.dtos.MuscleGroupDto;
 import br.com.treinow.models.entities.MuscleGroupEntity;
+import br.com.treinow.models.entities.RolePermissionEntity;
 import br.com.treinow.service.MuscleGroupService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController

@@ -2,14 +2,12 @@ package br.com.treinow.service;
 
 import br.com.treinow.dtos.MuscleGroupDto;
 import br.com.treinow.models.entities.MuscleGroupEntity;
+import br.com.treinow.models.entities.RolePermissionEntity;
 import br.com.treinow.repositories.jpa.MuscleGroupRepository;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
