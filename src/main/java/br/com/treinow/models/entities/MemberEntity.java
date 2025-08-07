@@ -16,7 +16,7 @@ public class MemberEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private UUID userId;
-    private Long membershipId;
+    private UUID membershipId;
     private String payment;
     private String gender;
     private String weight;
