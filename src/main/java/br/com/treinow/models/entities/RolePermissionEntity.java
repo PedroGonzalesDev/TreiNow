@@ -12,7 +12,7 @@ public class RolePermissionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    private Long roleId;
-    private Long permissionId;
+    private UUID roleId;
+    private UUID permissionId;
 
 }
