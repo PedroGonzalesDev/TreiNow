@@ -27,7 +27,7 @@ public class UserEntity {
     @Column(unique = true, length = 14)
     private String cpf;
     private String phone;
-    private Long addressId;
+    private UUID addressId;
     private Long roleId;
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
