@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/roles/permission")
+@RequestMapping("/roles/rolepermission")
 public class RolePermissionController {
 
     @Autowired
