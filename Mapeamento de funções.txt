@@ -1,0 +1,73 @@
+Recepcionista / Atendente
+Acesso: Cadastro de alunos, matrículas, agendamentos, check-in de alunos, vendas de planos.
+
+Funções no sistema:
+
+Registrar novos alunos e atualizar dados cadastrais.
+
+Realizar check-in de alunos no sistema.
+
+Agendar aulas e horários de treino.
+
+Emitir relatórios básicos de frequência.
+
+Vender planos e receber pagamentos.
+
+2. Coordenador / Gerente
+Acesso: Relatórios financeiros, gestão de funcionários, ajustes de planos, métricas de desempenho.
+
+Funções no sistema:
+
+Aprovar descontos e alterações em contratos.
+
+Monitorar inadimplência e gerar cobranças.
+
+Acompanhar metas de vendas e frequência de alunos.
+
+Gerenciar horários de funcionários e instrutores.
+
+3. Instrutor / Personal Trainer
+Acesso: Fichas de treino, acompanhamento de alunos, presença em aulas.
+
+Funções no sistema:
+
+Cadastrar e atualizar treinos personalizados.
+
+Registrar presença em aulas ou treinos.
+
+Verificar histórico de evolução do aluno.
+
+Agendar avaliações físicas.
+
+4. Financeiro / Administrativo
+Acesso: Controle de pagamentos, fluxo de caixa, mensalidades, relatórios contábeis.
+
+Funções no sistema:
+
+Lançar pagamentos e emitir recibos.
+
+Gerar boletos e notificar inadimplentes.
+
+Conciliar movimentações financeiras.
+
+Emitir relatórios de faturamento.
+
+5. TI / Suporte do Sistema
+Acesso: Configurações do sistema, permissões, backups, solução de problemas.
+
+Funções no sistema:
+
+Gerenciar acessos e permissões de usuários.
+
+Realizar manutenção e atualizações do software.
+
+Resolver falhas técnicas.
+
+6. Supervisor de Limpeza / Manutenção (em alguns casos)
+Acesso: Agenda de limpeza, controle de equipamentos (se integrado ao sistema).
+
+Funções no sistema:
+
+Registrar manutenções preventivas em equipamentos.
+
+Acompanhar horários de limpeza.

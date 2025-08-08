@@ -1,11 +1,16 @@
 package br.com.treinow.service;
 
 import br.com.treinow.dtos.UserDto;
+import br.com.treinow.models.entities.AddressEntity;
+import br.com.treinow.models.entities.RoleEntity;
 import br.com.treinow.models.entities.UserEntity;
+import br.com.treinow.repositories.jpa.AddressRepository;
+import br.com.treinow.repositories.jpa.RoleRepository;
 import br.com.treinow.repositories.jpa.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,13 +23,26 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
     //Regra de negocio metodo POST - cria usuario
     public UserEntity createUser(@Valid UserDto userDto){
         var userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
-        if (userEntity .getIsActive() == null) {
-            userEntity.setIsActive(true);
-        }
+        if (userEntity .getIsActive() == null) { userEntity.setIsActive(true);}
+
+        var addressEntity = new AddressEntity();
+        BeanUtils.copyProperties(userDto.address(), addressEntity);
+        userEntity.setAddress(addressEntity);
+
+        RoleEntity role = roleRepository.findById(userDto.roleId()).
+                orElseThrow(() -> new RuntimeException("Role not found"));
+
+        userEntity.setRole(role);
 
         return userRepository.save(userEntity);
     }
