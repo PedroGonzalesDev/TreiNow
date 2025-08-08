@@ -27,8 +27,12 @@ public class UserEntity {
     @Column(unique = true, length = 14)
     private String cpf;
     private String phone;
-    private UUID addressId;
-    private Long roleId;
+    @ManyToOne(cascade = CascadeType.ALL) //salva o address junto
+    @JoinColumn(name = "address_id")
+    private AddressEntity address;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private String createdAt;
