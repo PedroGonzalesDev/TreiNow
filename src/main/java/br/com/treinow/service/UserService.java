@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,11 +30,17 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     //Regra de negocio metodo POST - cria usuario
     public UserEntity createUser(@Valid UserDto userDto){
         var userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
         if (userEntity .getIsActive() == null) { userEntity.setIsActive(true);}
+
+        String encryptedPassword = passwordEncoder.encode(userDto.password());
+        userEntity.setPassword(encryptedPassword);
 
         var addressEntity = new AddressEntity();
         BeanUtils.copyProperties(userDto.address(), addressEntity);
@@ -66,6 +73,12 @@ public class UserService {
     public UserEntity updateUser(UUID id, @Valid UserDto userDto){
         var user = userRepository.findById(id).orElseThrow();
         BeanUtils.copyProperties(userDto, user, "id");
+
+        if (userDto.password() != null && !userDto.password().isBlank()){
+            String encryptedPassword = passwordEncoder.encode(userDto.password());
+            user.setPassword(encryptedPassword);
+        }
+
         return userRepository.save(user);
     }
 
