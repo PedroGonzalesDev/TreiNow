@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +45,16 @@ public class UserController {
         List<UserEntity> users = userService.findByName(name);
         List<UserResponseDto> response = users.stream().map(user -> new UserResponseDto(user.getId(), user.getName(), user.getEmail())).toList();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDto> getMyProfile(@AuthenticationPrincipal UserEntity currentUser){
+        UserResponseDto userProfile = new UserResponseDto(
+                currentUser.getId(),
+                currentUser.getName(),
+                currentUser.getEmail()
+                );
+        return ResponseEntity.ok(userProfile);
     }
 
     @PutMapping("/{id}") //Metodo Update, atualiza o usuario enviando os dados obrigatorios no json
