@@ -2,7 +2,6 @@ package br.com.treinow.service;
 
 import br.com.treinow.dtos.MuscleGroupDto;
 import br.com.treinow.models.entities.MuscleGroupEntity;
-import br.com.treinow.models.entities.RolePermissionEntity;
 import br.com.treinow.repositories.jpa.MuscleGroupRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;

@@ -1,0 +1,111 @@
+-- #############################################################################
+-- ##      SCRIPT DE INICIALIZAÇÃO DE DADOS PARA O PROJETO TREINOW            ##
+-- #############################################################################
+
+
+-- PASSO 1: INSERÇÃO DAS PERMISSÕES (AS "CHAVES" DO SISTEMA)
+-- Permissões relacionadas a Alunos/Membros
+INSERT INTO permission (name, description) VALUES ('ALUNO_CREATE', 'Permite registrar novos alunos');
+INSERT INTO permission (name, description) VALUES ('ALUNO_UPDATE', 'Permite atualizar dados cadastrais de alunos');
+INSERT INTO permission (name, description) VALUES ('ALUNO_READ_ALL', 'Permite listar e buscar todos os alunos');
+INSERT INTO permission (name, description) VALUES ('ALUNO_HISTORICO_READ', 'Permite verificar o histórico e evolução de um aluno');
+
+-- Permissões relacionadas ao Perfil do Próprio Usuário
+INSERT INTO permission (name, description) VALUES ('PROFILE_UPDATE_OWN', 'Permite que o usuário atualize seu próprio perfil');
+
+-- Permissões relacionadas a Treinos e Exercícios
+INSERT INTO permission (name, description) VALUES ('TREINO_CREATE', 'Permite criar e montar fichas de treino para alunos');
+INSERT INTO permission (name, description) VALUES ('TREINO_UPDATE', 'Permite atualizar fichas de treino de alunos');
+INSERT INTO permission (name, description) VALUES ('TREINO_READ_OWN', 'Permite que o aluno consulte sua própria ficha de treino');
+INSERT INTO permission (name, description) VALUES ('EXERCICIO_READ', 'Permite consultar a base de exercícios');
+
+-- Permissões de Operações Diárias (Check-in, Agendamentos)
+INSERT INTO permission (name, description) VALUES ('CHECKIN_CREATE', 'Permite realizar o check-in de um aluno');
+INSERT INTO permission (name, description) VALUES ('CATRACA_MANAGE', 'Permite controlar o acesso e liberação da catraca');
+INSERT INTO permission (name, description) VALUES ('AULA_SCHEDULE', 'Permite agendar aulas e horários de treino');
+INSERT INTO permission (name, description) VALUES ('AVALIACAO_FISICA_SCHEDULE', 'Permite agendar avaliações físicas');
+INSERT INTO permission (name, description) VALUES ('PRESENCA_MANAGE', 'Permite registrar presença de alunos em aulas ou treinos');
+
+-- Permissões Financeiras e de Vendas
+INSERT INTO permission (name, description) VALUES ('PLANO_SELL', 'Permite vender planos e realizar matrículas');
+INSERT INTO permission (name, description) VALUES ('PAGAMENTO_RECEIVE', 'Permite receber pagamentos de mensalidades');
+INSERT INTO permission (name, description) VALUES ('PAGAMENTO_CREATE', 'Permite lançar pagamentos e emitir recibos');
+INSERT INTO permission (name, description) VALUES ('CONTRATO_DISCOUNT_APPROVE', 'Permite aprovar descontos e alterações em contratos');
+INSERT INTO permission (name, description) VALUES ('CONTRATO_UPDATE', 'Permite alterar contratos');
+INSERT INTO permission (name, description) VALUES ('INADIMPLENCIA_READ', 'Permite monitorar a inadimplência');
+INSERT INTO permission (name,description) VALUES ('INADIMPLENCIA_NOTIFY', 'Permite notificar inadimplentes e gerar cobranças');
+INSERT INTO permission (name, description) VALUES ('BOLETO_CREATE', 'Permite gerar boletos');
+INSERT INTO permission (name, description) VALUES ('FINANCEIRO_CONCILIAR', 'Permite conciliar movimentações financeiras');
+
+-- Permissões de Relatórios e Gestão
+INSERT INTO permission (name, description) VALUES ('REPORT_FREQUENCY_READ_BASIC', 'Permite emitir relatórios básicos de frequência');
+INSERT INTO permission (name, description) VALUES ('REPORT_FREQUENCY_READ_FULL', 'Permite acompanhar métricas detalhadas de frequência');
+INSERT INTO permission (name, description) VALUES ('REPORT_VENDAS_READ', 'Permite acompanhar metas de vendas');
+INSERT INTO permission (name, description) VALUES ('REPORT_FATURAMENTO_READ', 'Permite emitir relatórios de faturamento');
+INSERT INTO permission (name, description) VALUES ('FUNCIONARIO_HORARIO_MANAGE', 'Permite gerenciar horários de funcionários e instrutores');
+
+-- Permissões de Administração do Sistema
+INSERT INTO permission (name, description) VALUES ('ROLE_MANAGE', 'Permite gerenciar roles e suas permissões');
+INSERT INTO permission (name, description) VALUES ('USER_MANAGE_STAFF', 'Permite criar e gerenciar usuários da equipe (funcionários)');
+
+
+-- PASSO 2: INSERÇÃO DAS ROLES (OS "CHAVEIROS")
+INSERT INTO role (name, description) VALUES ('ROLE_ALUNO', 'Aluno / Membro da academia');
+INSERT INTO role (name, description) VALUES ('ROLE_RECEPCIONISTA', 'Recepcionista / Atendente da academia');
+INSERT INTO role (name, description) VALUES ('ROLE_COORDENADOR', 'Coordenador / Gerente da academia');
+INSERT INTO role (name, description) VALUES ('ROLE_INSTRUTOR', 'Instrutor / Personal Trainer');
+INSERT INTO role (name, description) VALUES ('ROLE_FINANCEIRO', 'Responsável Financeiro / Administrativo');
+INSERT INTO role (name, description) VALUES ('ROLE_ADMIN', 'Administrador com acesso total ao sistema');
+
+
+-- PASSO 3: VINCULAÇÃO DAS PERMISSÕES ÀS ROLES (COLOCANDO AS "CHAVES" NOS "CHAVEIROS")
+-- Usamos `SELECT` para pegar os IDs dinamicamente, tornando o script mais robusto.
+
+-- Permissões para: Aluno (Usuário Final)
+INSERT INTO role_permission (role_id, permission_id) VALUES
+((SELECT id FROM role WHERE name = 'ROLE_ALUNO'), (SELECT id FROM permission WHERE name = 'PROFILE_UPDATE_OWN')),
+((SELECT id FROM role WHERE name = 'ROLE_ALUNO'), (SELECT id FROM permission WHERE name = 'TREINO_READ_OWN')),
+((SELECT id FROM role WHERE name = 'ROLE_ALUNO'), (SELECT id FROM permission WHERE name = 'EXERCICIO_READ'));
+
+-- Permissões para: Recepcionista / Atendente
+INSERT INTO role_permission (role_id, permission_id) VALUES
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'ALUNO_CREATE')),
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'ALUNO_UPDATE')),
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'CHECKIN_CREATE')),
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'CATRACA_MANAGE')),
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'AULA_SCHEDULE')),
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'REPORT_FREQUENCY_READ_BASIC')),
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'PLANO_SELL')),
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'PAGAMENTO_RECEIVE')),
+((SELECT id FROM role WHERE name = 'ROLE_RECEPCIONISTA'), (SELECT id FROM permission WHERE name = 'AVALIACAO_FISICA_SCHEDULE'));
+
+-- Permissões para: Coordenador / Gerente
+INSERT INTO role_permission (role_id, permission_id) VALUES
+((SELECT id FROM role WHERE name = 'ROLE_COORDENADOR'), (SELECT id FROM permission WHERE name = 'CONTRATO_DISCOUNT_APPROVE')),
+((SELECT id FROM role WHERE name = 'ROLE_COORDENADOR'), (SELECT id FROM permission WHERE name = 'CONTRATO_UPDATE')),
+((SELECT id FROM role WHERE name = 'ROLE_COORDENADOR'), (SELECT id FROM permission WHERE name = 'INADIMPLENCIA_READ')),
+((SELECT id FROM role WHERE name = 'ROLE_COORDENADOR'), (SELECT id FROM permission WHERE name = 'INADIMPLENCIA_NOTIFY')),
+((SELECT id FROM role WHERE name = 'ROLE_COORDENADOR'), (SELECT id FROM permission WHERE name = 'REPORT_VENDAS_READ')),
+((SELECT id FROM role WHERE name = 'ROLE_COORDENADOR'), (SELECT id FROM permission WHERE name = 'REPORT_FREQUENCY_READ_FULL')),
+((SELECT id FROM role WHERE name = 'ROLE_COORDENADOR'), (SELECT id FROM permission WHERE name = 'FUNCIONARIO_HORARIO_MANAGE'));
+
+-- Permissões para: Instrutor / Personal Trainer
+INSERT INTO role_permission (role_id, permission_id) VALUES
+((SELECT id FROM role WHERE name = 'ROLE_INSTRUTOR'), (SELECT id FROM permission WHERE name = 'TREINO_CREATE')),
+((SELECT id FROM role WHERE name = 'ROLE_INSTRUTOR'), (SELECT id FROM permission WHERE name = 'TREINO_UPDATE')),
+((SELECT id FROM role WHERE name = 'ROLE_INSTRUTOR'), (SELECT id FROM permission WHERE name = 'PRESENCA_MANAGE')),
+((SELECT id FROM role WHERE name = 'ROLE_INSTRUTOR'), (SELECT id FROM permission WHERE name = 'ALUNO_HISTORICO_READ')),
+((SELECT id FROM role WHERE name = 'ROLE_INSTRUTOR'), (SELECT id FROM permission WHERE name = 'AVALIACAO_FISICA_SCHEDULE'));
+
+-- Permissões para: Financeiro / Administrativo
+INSERT INTO role_permission (role_id, permission_id) VALUES
+((SELECT id FROM role WHERE name = 'ROLE_FINANCEIRO'), (SELECT id FROM permission WHERE name = 'PAGAMENTO_CREATE')),
+((SELECT id FROM role WHERE name = 'ROLE_FINANCEIRO'), (SELECT id FROM permission WHERE name = 'BOLETO_CREATE')),
+((SELECT id FROM role WHERE name = 'ROLE_FINANCEIRO'), (SELECT id FROM permission WHERE name = 'INADIMPLENCIA_NOTIFY')),
+((SELECT id FROM role WHERE name = 'ROLE_FINANCEIRO'), (SELECT id FROM permission WHERE name = 'FINANCEIRO_CONCILIAR')),
+((SELECT id FROM role WHERE name = 'ROLE_FINANCEIRO'), (SELECT id FROM permission WHERE name = 'REPORT_FATURAMENTO_READ'));
+
+-- Permissões para: Administrador (Acesso Total)
+-- Um jeito fácil de dar todas as permissões é selecionando todos os IDs da tabela permission.
+INSERT INTO role_permission (role_id, permission_id)
+SELECT (SELECT id FROM role WHERE name = 'ROLE_ADMIN'), id FROM permission;

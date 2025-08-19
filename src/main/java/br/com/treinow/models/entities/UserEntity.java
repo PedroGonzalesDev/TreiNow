@@ -12,9 +12,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -27,7 +30,7 @@ public class UserEntity implements UserDetails {
     private String name;
     @Column(unique = true)
     private String email;
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @CPF
     @Column(unique = true, length = 14)
@@ -36,13 +39,13 @@ public class UserEntity implements UserDetails {
     @ManyToOne(cascade = CascadeType.ALL) //salva o address junto
     @JoinColumn(name = "address_id")
     private AddressEntity address;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private RoleEntity role;
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
-    private String createdAt;
-    private String lastLogin;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastLogin;
     @Column(nullable = false)
     private Boolean isActive = true;
     private void setDefaultActive(){
@@ -51,10 +54,15 @@ public class UserEntity implements UserDetails {
         }
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
-        //Retorna a lista de permissões/roles
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()));
+        if (this.role == null || this.role.getPermissions() == null){
+            return Collections.emptySet();
+        }
+        return this.role.getPermissions().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+                .collect(Collectors.toSet());
     }
 
     @Override
