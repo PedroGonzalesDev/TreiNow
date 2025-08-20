@@ -1,10 +1,9 @@
 package br.com.treinow.dtos;
 
-import jakarta.validation.constraints.NotBlank;
+import java.util.UUID;
 
 public record RoleDto(
-    @NotBlank(message = "Insert name to continue")
-    String name,
-    String description
+        UUID id,
+        String name
 ) {
 }

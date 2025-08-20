@@ -48,12 +48,6 @@ public class UserEntity implements UserDetails {
     private LocalDateTime lastLogin;
     @Column(nullable = false)
     private Boolean isActive = true;
-    private void setDefaultActive(){
-        if(this.isActive == null){
-            this.isActive = true;
-        }
-    }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){

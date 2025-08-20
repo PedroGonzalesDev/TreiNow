@@ -1,7 +1,9 @@
 package br.com.treinow.controller;
 
+import br.com.treinow.dtos.RoleDto;
 import br.com.treinow.dtos.UserDto;
 import br.com.treinow.dtos.UserResponseDto;
+import br.com.treinow.mapper.UserMapper;
 import br.com.treinow.models.entities.UserEntity;
 import br.com.treinow.service.UserService;
 import jakarta.validation.Valid;
@@ -20,51 +22,47 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)//Metodo post - Cadastra usuario
-    public UserEntity createUser(@RequestBody @Valid UserDto userDto){
+    public UserResponseDto createUser(@RequestBody @Valid UserDto userDto){
         var createdUser = userService.createUser(userDto);
         return createdUser;
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)//Metodo Get, puxa todos os usuarios
-    public List<UserEntity> getAllUsers(){
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{id}") //Metodo get by id, puxa o usuarios de ID selecionado
-    public ResponseEntity<Object> getUserById(@PathVariable(value="id") UUID id){
-        return userService.findById(id).<ResponseEntity<Object>>map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found."));
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable(value="id") UUID id){
+        return userService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search") //Metodo get by name, puxa os usuarios pelo nome
     public ResponseEntity<List<UserResponseDto>> searchUsers(@RequestParam String name){
-        List<UserEntity> users = userService.findByName(name);
-        List<UserResponseDto> response = users.stream().map(user -> new UserResponseDto(user.getId(), user.getName(), user.getEmail())).toList();
-        return ResponseEntity.ok(response);
+        List<UserResponseDto> users = userService.findByName(name);
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDto> getMyProfile(@AuthenticationPrincipal UserEntity currentUser){
-        UserResponseDto userProfile = new UserResponseDto(
-                currentUser.getId(),
-                currentUser.getName(),
-                currentUser.getEmail()
-                );
+    public ResponseEntity<UserResponseDto> getMyProfile(@AuthenticationPrincipal UserEntity currentUser, RoleDto roleDto){
+        UserResponseDto userProfile = userMapper.toUserResponseDto(currentUser);
         return ResponseEntity.ok(userProfile);
     }
 
     @PutMapping("/{id}") //Metodo Update, atualiza o usuario enviando os dados obrigatorios no json
-    public ResponseEntity<Object> updateUser(@PathVariable UUID id,
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable UUID id,
                                              @RequestBody @Valid UserDto userDto) {
         try{
-            var userUpdated = userService.updateUser(id, userDto);
-            return ResponseEntity.status(HttpStatus.OK).body(userUpdated);
+            UserResponseDto userUpdated = userService.updateUser(id, userDto);
+            return ResponseEntity.ok(userUpdated);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -72,9 +70,9 @@ public class UserController {
     public ResponseEntity<Object> deleteUser(@PathVariable UUID id) {
         try {
             userService.deleteUser(id);
-            return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not Found.");
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }
