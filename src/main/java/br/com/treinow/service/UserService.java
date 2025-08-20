@@ -1,6 +1,7 @@
 package br.com.treinow.service;
 
-import br.com.treinow.dtos.UserDto;
+import br.com.treinow.dtos.*;
+import br.com.treinow.mapper.UserMapper;
 import br.com.treinow.models.entities.AddressEntity;
 import br.com.treinow.models.entities.RoleEntity;
 import br.com.treinow.models.entities.UserEntity;
@@ -10,9 +11,9 @@ import br.com.treinow.repositories.jpa.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,18 +24,17 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private AddressRepository addressRepository;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserMapper userMapper;
 
     //Regra de negocio metodo POST - cria usuario
-    public UserEntity createUser(@Valid UserDto userDto){
+    public UserResponseDto createUser(UserDto userDto){
         var userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
         if (userEntity .getIsActive() == null) { userEntity.setIsActive(true);}
@@ -46,40 +46,73 @@ public class UserService {
         BeanUtils.copyProperties(userDto.address(), addressEntity);
         userEntity.setAddress(addressEntity);
 
-        RoleEntity role = roleRepository.findById(userDto.roleId()).
-                orElseThrow(() -> new RuntimeException("Role not found"));
+        RoleEntity defaultRole = roleRepository.findByName("ROLE_ALUNO")
+                        .orElseThrow(() -> new RuntimeException("Erro: Role 'ROLE_ALUNO' não encontrada"));
 
+        userEntity.setRole(defaultRole);
+
+        UserEntity savedUser = userRepository.save(userEntity);
+
+        return userMapper.toUserResponseDto(savedUser);
+    }
+    //Metodo para cadastrar um usuario com qualquer role do sistema via endpoint protegido
+    public UserResponseDto createUserByAdmin(AdminsUserCreateDto dto){
+        var userEntity = new UserEntity();
+        BeanUtils.copyProperties(dto, userEntity);
+        var addressEntity = new AddressEntity();
+        BeanUtils.copyProperties(dto.address(), addressEntity);
+
+        RoleEntity role = roleRepository.findById(dto.roleId())
+                .orElseThrow(() -> new RuntimeException("Erro: Role com ID " + dto.roleId() + " não encontrado"));
         userEntity.setRole(role);
 
-        return userRepository.save(userEntity);
+        UserEntity savedUser = userRepository.save(userEntity);
+
+        return userMapper.toUserResponseDto(savedUser);
+    }
+    //Atualiza role de um usuario já existente por qualquer role do sistema via endpoint protegido
+    public UserResponseDto updateUserRole(UUID userId, UserRoleUpdateDto dto){
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Erro: Usuário com ID " + userId + " não encontrado"));
+
+        RoleEntity newRole = roleRepository.findById(dto.newRoleId())
+                .orElseThrow(() -> new RuntimeException("Erro: Role com id " + dto.newRoleId() + " não encontrada"));
+
+        user.setRole(newRole);
+        UserEntity updatedUser = userRepository.save(user);
+        return userMapper.toUserResponseDto(updatedUser);
     }
 
     //Regra de negocio metodo GET ALL - Puxa todos os usuarios
-    public List<UserEntity> getAllUsers(){
-        return userRepository.findAll();
+    public List<UserResponseDto> getAllUsers() {
+        return userMapper.toUserResponseDtoList(userRepository.findAll());
     }
 
     //Regra de negocio metodo GET POR ID - Puxa o usuario do ID selecionado
-    public Optional<UserEntity> findById(UUID id){
-        return userRepository.findById(id);
+    public Optional<UserResponseDto> findById(UUID id) {
+        return userRepository.findById(id).map(userMapper::toUserResponseDto);
     }
 
     //Regra de negocio metodo GET por NOME - puxa o usuario pelo nome selecionado
-    public List<UserEntity> findByName(String name){
-        return userRepository.findByNameContainingIgnoreCase(name);
+    public List<UserResponseDto> findByName(String name) {
+        return userMapper.toUserResponseDtoList(userRepository.findByNameContainingIgnoreCase(name));
     }
 
+
     //Regra de negocio metodo UPDATE usuario - Atualiza campo desejado do usuario
-    public UserEntity updateUser(UUID id, @Valid UserDto userDto){
-        var user = userRepository.findById(id).orElseThrow();
+    public UserResponseDto updateUser(UUID id, @Valid UserDto userDto) {
+        UserEntity user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         BeanUtils.copyProperties(userDto, user, "id");
 
-        if (userDto.password() != null && !userDto.password().isBlank()){
+        if (userDto.password() != null && !userDto.password().isBlank()) {
             String encryptedPassword = passwordEncoder.encode(userDto.password());
             user.setPassword(encryptedPassword);
         }
 
-        return userRepository.save(user);
+        UserEntity updatedUser = userRepository.save(user);
+
+        return userMapper.toUserResponseDto(updatedUser);
     }
 
     //Regra de negocio metodo DELETE - dele o usuario do ID selecionado

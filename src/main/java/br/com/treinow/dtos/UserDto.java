@@ -26,7 +26,7 @@ public record UserDto(
     String phone,
     @NotNull(message = "Select the address is required to continue")
     AddressDto address,
-    @NotNull(message = "Select the role is required to continue")
+//    @NotNull(message = "Select the role is required to continue")
     UUID roleId,
     @JsonProperty(defaultValue = "true")
     Boolean isActive,

@@ -1,0 +1,5 @@
+Criar novamente todas as foreign Keys
+
+Crriar um endpoint chamado AdminCreateUserDto para que seja possível criar usuários de administrador sem acessar o DB
+
+Adicionar autoridade para todos os endpoints dos controllers
