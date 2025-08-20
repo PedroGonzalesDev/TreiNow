@@ -1,8 +1,6 @@
 package br.com.treinow.service;
 
-import br.com.treinow.dtos.RoleDto;
-import br.com.treinow.dtos.UserDto;
-import br.com.treinow.dtos.UserResponseDto;
+import br.com.treinow.dtos.*;
 import br.com.treinow.mapper.UserMapper;
 import br.com.treinow.models.entities.AddressEntity;
 import br.com.treinow.models.entities.RoleEntity;
@@ -13,14 +11,13 @@ import br.com.treinow.repositories.jpa.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -32,7 +29,7 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
 
@@ -57,6 +54,34 @@ public class UserService {
         UserEntity savedUser = userRepository.save(userEntity);
 
         return userMapper.toUserResponseDto(savedUser);
+    }
+    //Metodo para cadastrar um usuario com qualquer role do sistema via endpoint protegido
+    public UserResponseDto createUserByAdmin(AdminsUserCreateDto dto){
+        var userEntity = new UserEntity();
+        BeanUtils.copyProperties(dto, userEntity);
+        var addressEntity = new AddressEntity();
+        BeanUtils.copyProperties(dto.address(), addressEntity);
+
+        RoleEntity role = roleRepository.findById(dto.roleId())
+                .orElseThrow(() -> new RuntimeException("Erro: Role com ID " + dto.roleId() + " não encontrado"));
+        userEntity.setRole(role);
+
+        UserEntity savedUser = userRepository.save(userEntity);
+
+        return userMapper.toUserResponseDto(savedUser);
+    }
+    //Atualiza role de um usuario já existente por qualquer role do sistema via endpoint protegido
+    public UserResponseDto updateUserRole(UUID userId, UserRoleUpdateDto dto){
+
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Erro: Usuário com ID " + userId + " não encontrado"));
+
+        RoleEntity newRole = roleRepository.findById(dto.newRoleId())
+                .orElseThrow(() -> new RuntimeException("Erro: Role com id " + dto.newRoleId() + " não encontrada"));
+
+        user.setRole(newRole);
+        UserEntity updatedUser = userRepository.save(user);
+        return userMapper.toUserResponseDto(updatedUser);
     }
 
     //Regra de negocio metodo GET ALL - Puxa todos os usuarios

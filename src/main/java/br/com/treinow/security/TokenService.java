@@ -6,11 +6,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 @Service
 public class TokenService {
@@ -21,10 +23,16 @@ public class TokenService {
     public String generateToken (UserEntity user){
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            List<String> authorities = user.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
+
             return JWT.create()
                     .withIssuer("treinow-api")
                     .withSubject(user.getEmail())
                     .withExpiresAt(genExpirationDate())
+                    .withClaim("authorities", authorities)
                     .sign(algorithm);
         }catch (JWTCreationException exception){
             throw new RuntimeException("Error while generation token", exception);
@@ -40,7 +48,7 @@ public class TokenService {
                     .verify(token)
                     .getSubject();
         }catch (JWTVerificationException exception){
-            return "Invalid token please verify and try again";
+            return "";
         }
     }
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -26,6 +27,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         var token = this.recoverToken(request);
         if (token != null){
             var email = tokenService.validateToken(token);
@@ -34,6 +36,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             if (user != null){
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
         }
         filterChain.doFilter(request, response);
