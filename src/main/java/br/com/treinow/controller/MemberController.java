@@ -2,15 +2,10 @@ package br.com.treinow.controller;
 
 
 import br.com.treinow.dtos.MemberDto;
-import br.com.treinow.dtos.MemberResponseDto;
-import br.com.treinow.dtos.UserDto;
 import br.com.treinow.models.entities.MemberEntity;
 import br.com.treinow.service.MemberService;
 import jakarta.validation.Valid;
-import lombok.Data;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

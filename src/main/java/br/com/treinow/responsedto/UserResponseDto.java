@@ -1,4 +1,6 @@
-package br.com.treinow.dtos;
+package br.com.treinow.responsedto;
+
+import br.com.treinow.dtos.RoleDto;
 
 import java.util.UUID;
 
