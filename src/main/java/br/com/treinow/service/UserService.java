@@ -8,10 +8,10 @@ import br.com.treinow.models.entities.UserEntity;
 import br.com.treinow.repositories.jpa.AddressRepository;
 import br.com.treinow.repositories.jpa.RoleRepository;
 import br.com.treinow.repositories.jpa.UserRepository;
+import br.com.treinow.responsedto.UserResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

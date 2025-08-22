@@ -2,7 +2,7 @@ package br.com.treinow.controller;
 
 
 import br.com.treinow.dtos.AddressDto;
-import br.com.treinow.dtos.AddressResponseDto;
+import br.com.treinow.responsedto.AddressResponseDto;
 import br.com.treinow.models.entities.AddressEntity;
 import br.com.treinow.service.AddressService;
 import jakarta.validation.Valid;

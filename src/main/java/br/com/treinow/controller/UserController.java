@@ -2,7 +2,7 @@ package br.com.treinow.controller;
 
 import br.com.treinow.dtos.RoleDto;
 import br.com.treinow.dtos.UserDto;
-import br.com.treinow.dtos.UserResponseDto;
+import br.com.treinow.responsedto.UserResponseDto;
 import br.com.treinow.mapper.UserMapper;
 import br.com.treinow.models.entities.UserEntity;
 import br.com.treinow.service.UserService;

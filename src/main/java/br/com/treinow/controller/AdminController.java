@@ -2,7 +2,7 @@ package br.com.treinow.controller;
 
 
 import br.com.treinow.dtos.AdminsUserCreateDto;
-import br.com.treinow.dtos.UserResponseDto;
+import br.com.treinow.responsedto.UserResponseDto;
 import br.com.treinow.dtos.UserRoleUpdateDto;
 import br.com.treinow.service.UserService;
 import jakarta.validation.Valid;

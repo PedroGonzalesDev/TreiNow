@@ -1,7 +1,7 @@
 package br.com.treinow.mapper;
 
 
-import br.com.treinow.dtos.UserResponseDto;
+import br.com.treinow.responsedto.UserResponseDto;
 import br.com.treinow.models.entities.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
