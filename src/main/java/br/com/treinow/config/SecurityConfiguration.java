@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/users/search").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/users/{id}").authenticated()
                         .requestMatchers(HttpMethod.GET, "/users/me").authenticated()
+                        .requestMatchers("/roles/**").hasAuthority("ROLE_MANAGE")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter,UsernamePasswordAuthenticationFilter.class)
