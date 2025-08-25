@@ -1,8 +1,10 @@
 package br.com.treinow.service;
 
 import br.com.treinow.dtos.RoleDto;
+import br.com.treinow.mapper.RoleMapper;
 import br.com.treinow.models.entities.RoleEntity;
 import br.com.treinow.repositories.jpa.RoleRepository;
+import br.com.treinow.responsedto.RoleResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class RoleService {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private RoleMapper roleMapper;
 
     public RoleEntity createRole (@Valid RoleDto roleDto){
         var roleEntity = new RoleEntity();
@@ -24,12 +28,12 @@ public class RoleService {
         return roleRepository.save(roleEntity);
     }
 
-    public List<RoleEntity> getAllRoles(){
-        return roleRepository.findAll();
+    public List<RoleResponseDto> getAllRoles(){
+        return roleMapper.toRoleReponseDtoList(roleRepository.findAll());
     }
 
-    public Optional<RoleEntity> findRoleById(UUID id){
-        return roleRepository.findById(id);
+    public Optional<RoleResponseDto> findRoleById(UUID id){
+        return roleRepository.findById(id).map(roleMapper::toRoleResponseDto);
     }
 
     public RoleEntity updateRole (UUID id, @Valid RoleDto roleDto){
