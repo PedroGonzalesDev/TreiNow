@@ -8,6 +8,7 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Member;
@@ -23,6 +24,7 @@ public class MembershipController {
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('MANAGE_MEMBERSHIP')")
     public MembershipEntity createMembership(@RequestBody @Valid MembershipDto membershipDto){
         var createdMembership= membershipService.createMembership(membershipDto);
         return createdMembership;
@@ -30,11 +32,13 @@ public class MembershipController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('MEMBERSHIP_READ')")
     public List<MembershipEntity> getAllMembership(){
         return membershipService.getAllMembership();
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('MANAGE_MEMBERSHIP')")
     public ResponseEntity<Object> updateMembership(@PathVariable UUID id,
                                                    @RequestBody @Valid MembershipDto membershipDto){
         try{
@@ -46,6 +50,7 @@ public class MembershipController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteMembership(@PathVariable UUID id){
         try{
             membershipService.deleteMembership(id);

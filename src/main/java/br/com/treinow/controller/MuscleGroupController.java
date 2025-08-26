@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class MuscleGroupController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ATRIBUTO_CREATE')")
     public MuscleGroupEntity createMuscleGroup(@RequestBody @Valid MuscleGroupDto muscleGroupDto){
         var createdMuscleGroup = muscleGroupService.createMuscleGroup(muscleGroupDto);
         return createdMuscleGroup;
@@ -28,6 +30,7 @@ public class MuscleGroupController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ATRIBUTO_READ')")
     public List<MuscleGroupEntity> getAllMuscleGroup(){
         return muscleGroupService.getAllMuscleGroup();
     }
@@ -43,6 +46,7 @@ public class MuscleGroupController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ATRIBUTO_UPDATE')")
     public ResponseEntity<Object> updateMuscleGroup(@PathVariable UUID id,
                                                     @RequestBody @Valid MuscleGroupDto muscleGroupDto){
         try{
@@ -54,6 +58,7 @@ public class MuscleGroupController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ATRIBUTO_DELETE')")
     public ResponseEntity<Object> deleteMuscleGroup(@PathVariable UUID id){
         try{
             muscleGroupService.deleteMuscleGroup(id);

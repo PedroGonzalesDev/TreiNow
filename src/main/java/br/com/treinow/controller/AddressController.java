@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class AddressController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADDRESS_CREATE')")
     public AddressEntity createAddress(@RequestBody @Valid AddressDto addressDto){
         var createdAddress = addressService.createAddress(addressDto);
         return createdAddress;
@@ -30,11 +32,13 @@ public class AddressController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ADDRESS_READ')")
     public List<AddressEntity> getAllAddress(){
         return addressService.getAllAddress();
     }
     
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADDRESS_READ')")
     public ResponseEntity<Object> getAddressById(@PathVariable(value = "id") UUID id){
         return addressService.findById(id).<ResponseEntity<Object>>map(ResponseEntity::ok).
                 orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found please verify the ID"));
@@ -42,6 +46,7 @@ public class AddressController {
 
 
     @GetMapping("/search")
+    @PreAuthorize("hasAuthority('ADDRESS_READ')")
     public ResponseEntity<Object> getAddressByStreet(@RequestParam String street){
         List<AddressEntity> addresses = addressService.findByStreet(street);
         List<AddressResponseDto> response = addresses.stream().map(address -> new AddressResponseDto(
@@ -51,6 +56,7 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADDRESS_UPDATE')")
     public ResponseEntity<Object> updatedAddress(@PathVariable UUID id,
                                                  @RequestBody @Valid AddressDto addressDto){
         try{
@@ -62,6 +68,7 @@ public class AddressController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_MANAGE_STAFF')")
     public ResponseEntity<Object> deleteAddress(@PathVariable UUID id){
         try{
             addressService.deleteAddress(id);

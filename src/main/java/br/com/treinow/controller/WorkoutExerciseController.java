@@ -9,6 +9,7 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class WorkoutExerciseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('EXERCICIO_CREATE')")
     public WorkoutExerciseEntity createWorkoutExercise(@RequestBody @Valid WorkoutExerciseDto workoutExerciseDto){
         var createdWorkoutExercise = workoutExerciseService.createWorkoutExercise(workoutExerciseDto);
         return createdWorkoutExercise;
@@ -30,17 +32,20 @@ public class WorkoutExerciseController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('EXERCICIO_READ')")
     public List<WorkoutExerciseEntity> getAllWorkoutExercise(){
         return workoutExerciseService.getAllWorkoutExercise();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('EXERCICIO_READ')")
     public ResponseEntity<Object> getWorkoutExerciseById(@PathVariable(value = "id")UUID id){
         return workoutExerciseService.findWorkoutExerciseById(id).<ResponseEntity<Object>>map(ResponseEntity::ok).
                 orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Workout exercise not found please verify the id"));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('EXERCICIO_UPDATE')")
     public ResponseEntity<Object> updatedWorkoutExercise(@PathVariable UUID id,
                                                          @RequestBody @Valid WorkoutExerciseDto workoutExerciseDto){
         try{
@@ -52,6 +57,7 @@ public class WorkoutExerciseController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('EXERCICIO_DELETE')")
     public ResponseEntity<Object> deleteWorkoutExercise(@PathVariable UUID id){
         try{
             workoutExerciseService.deleteWorkoutExercise(id);
