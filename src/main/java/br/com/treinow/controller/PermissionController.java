@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class PermissionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public PermissionEntity createPermission(@RequestBody @Valid PermissionDto permissionDto){
         var createdPermission = permissionService.createPermission(permissionDto);
         return createdPermission;
@@ -29,11 +31,13 @@ public class PermissionController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<PermissionEntity> getAllPermissions(){
         return permissionService.getAllPermissions();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findPermissionById(@PathVariable(value = "id")UUID id){
         try{
             var permission = permissionService.findPermissionById(id);
@@ -44,6 +48,7 @@ public class PermissionController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updatePermission (@PathVariable UUID id,
                                                     @RequestBody @Valid PermissionDto permissionDto){
         try{
@@ -55,6 +60,7 @@ public class PermissionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deletePermission(@PathVariable UUID id){
         try {
             permissionService.deletePermission(id);

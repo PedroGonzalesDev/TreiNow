@@ -33,12 +33,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "auth/logout").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users").permitAll()//.hasRole("Administrador")
-                        .requestMatchers(HttpMethod.GET, "/users/me").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/search").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/users/{id}").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/users").permitAll() //Para cadastro de usuario
                         .requestMatchers(HttpMethod.GET, "/users/me").authenticated()
                         .requestMatchers("/roles/**").hasAuthority("ROLE_MANAGE")
                         .anyRequest().authenticated()

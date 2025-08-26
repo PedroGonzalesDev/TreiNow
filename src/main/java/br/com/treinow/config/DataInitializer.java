@@ -17,7 +17,6 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private PermissionRepository permissionRepository;
 
@@ -46,12 +45,33 @@ public class DataInitializer implements CommandLineRunner {
         alunoHistoricoRead.setName("ALUNO_HISTORICO_READ");
         alunoHistoricoRead.setDescription("Permite verificar o histórico e evolução de um aluno");
 
+        PermissionEntity addressCreate = new PermissionEntity();
+        addressCreate.setName("ADDRESS_CREATE");
+        addressCreate.setDescription("Permite cadastrar o endereço do usuario");
+
+        PermissionEntity addressRead = new PermissionEntity();
+        addressRead.setName("ADDRESS_READ");
+        addressRead.setDescription("Permite buscar todos os endereços cadastrados");
+
+        PermissionEntity addressUpdate = new PermissionEntity();
+        addressUpdate.setName("ADDRESS_UPDATE");
+        addressUpdate.setDescription("Permite atualizar o endereço de um usuario");
+
         // -- Perfil do Próprio Usuário
         PermissionEntity profileUpdateOwn = new PermissionEntity();
         profileUpdateOwn.setName("PROFILE_UPDATE_OWN");
         profileUpdateOwn.setDescription("Permite que o usuário atualize seu próprio perfil");
 
-        // -- Treinos e Exercícios
+        // -- Gerenciamento dos planos da academia
+        PermissionEntity manageMembership = new PermissionEntity();
+        manageMembership.setName("MANAGE_MEMBERSHIP");
+        manageMembership.setName("Permite criar, atualizar planos da academia");
+
+        PermissionEntity memberhsipRead = new PermissionEntity();
+        memberhsipRead.setName("MEMBERSHIP_READ");
+        memberhsipRead.setDescription("Permite listar todos os planos da academia");
+
+        // -- Gerenciamento de tabelas de treino
         PermissionEntity treinoCreate = new PermissionEntity();
         treinoCreate.setName("TREINO_CREATE");
         treinoCreate.setDescription("Permite criar e montar fichas de treino para alunos");
@@ -64,9 +84,49 @@ public class DataInitializer implements CommandLineRunner {
         treinoReadOwn.setName("TREINO_READ_OWN");
         treinoReadOwn.setDescription("Permite que o aluno consulte sua própria ficha de treino");
 
+        PermissionEntity treinoRead = new PermissionEntity();
+        treinoRead.setName("TREINO_READ");
+        treinoRead.setDescription("Permite consultar as tabelas de exercicio");
+
+        PermissionEntity treinoDelete = new PermissionEntity();
+        treinoDelete.setName("TREINO_DELETE");
+        treinoDelete.setDescription("Permite deletar exercicios");
+
+        // -- Gerenciamento de exercicios
+
+        PermissionEntity exercicioCreate = new PermissionEntity();
+        exercicioCreate.setName("EXERCICIO_CREATE");
+        exercicioCreate.setDescription("Permite relacionar um exercicio com as series e reps");
+
         PermissionEntity exercicioRead = new PermissionEntity();
         exercicioRead.setName("EXERCICIO_READ");
-        exercicioRead.setDescription("Permite consultar a base de exercícios");
+        exercicioCreate.setDescription("Permite ver os exercicios criados");
+
+        PermissionEntity exercicioUpdate = new PermissionEntity();
+        exercicioUpdate.setName("EXERCICIO_UPDATE");
+        exercicioUpdate.setDescription("Permite atualizar os dados do exercicio");
+
+        PermissionEntity exercicioDelete = new PermissionEntity();
+        exercicioDelete.setName("EXERCICIO_DELETE");
+        exercicioUpdate.setDescription("Permite deletar o exercicio por completo");
+
+        // -- Gerenciamento de atributos
+
+        PermissionEntity atributosCreate = new PermissionEntity();
+        atributosCreate.setName("ATRIBUTOS_CREATE");
+        atributosCreate.setDescription("Permite criar novos grupos musculares e categorias");
+
+        PermissionEntity atributosRead = new PermissionEntity();
+        atributosRead.setName("ATRIBUTOS_READ");
+        atributosCreate.setName("Permite verificar todos os grupos musculares e categorias já criados");
+
+        PermissionEntity atributosUpdate = new PermissionEntity();
+        atributosUpdate.setName("ATRIBUTOS_UPDATE");
+        atributosUpdate.setDescription("Permite atualizar os grupos musculares e categorias");
+
+        PermissionEntity atributosDelete = new PermissionEntity();
+        atributosDelete.setName("ATRIBUTOS_DELETE");
+        atributosDelete.setDescription("Permite deletar os grupos musculares e categorias");
 
         // -- Operações Diárias
         PermissionEntity checkinCreate = new PermissionEntity();
@@ -158,11 +218,13 @@ public class DataInitializer implements CommandLineRunner {
 
         List<PermissionEntity> allPermissions = Arrays.asList(
                 alunoCreate, alunoUpdate, alunoReadAll, alunoHistoricoRead, profileUpdateOwn, treinoCreate,
-                treinoUpdate, treinoReadOwn, exercicioRead, checkinCreate, catracaManage, aulaSchedule,
+                treinoUpdate, treinoReadOwn, treinoRead, checkinCreate, catracaManage, aulaSchedule,
                 avaliacaoFisicaSchedule, presencaManage, planoSell, pagamentoReceive, pagamentoCreate,
                 contratoDiscountApprove, contratoUpdate, inadimplenciaRead, inadimplenciaNotify, boletoCreate,
                 financeiroConciliar, reportFrequencyReadBasic, reportFrequencyReadFull, reportVendasRead,
-                reportFaturamentoRead, funcionarioHorarioManage, roleManage, userManageStaff
+                reportFaturamentoRead, funcionarioHorarioManage, roleManage, userManageStaff, treinoDelete,
+                exercicioCreate, exercicioRead, exercicioUpdate, exercicioDelete, atributosCreate, atributosRead,
+                atributosUpdate, atributosDelete, addressCreate, addressRead, addressRead, manageMembership, memberhsipRead
         );
         permissionRepository.saveAll(allPermissions);
 
@@ -170,22 +232,26 @@ public class DataInitializer implements CommandLineRunner {
         RoleEntity alunoRole = new RoleEntity();
         alunoRole.setName("ROLE_ALUNO");
         alunoRole.setDescription("Aluno / Membro da academia");
-        alunoRole.setPermissions(new HashSet<>(Arrays.asList(profileUpdateOwn, treinoReadOwn, exercicioRead)));
+        alunoRole.setPermissions(new HashSet<>(Arrays.asList(profileUpdateOwn, treinoReadOwn, treinoRead)));
 
         RoleEntity recepcionistaRole = new RoleEntity();
         recepcionistaRole.setName("ROLE_RECEPCIONISTA");
         recepcionistaRole.setDescription("Recepcionista / Atendente da academia");
-        recepcionistaRole.setPermissions(new HashSet<>(Arrays.asList(alunoCreate, alunoUpdate, checkinCreate, catracaManage, aulaSchedule, reportFrequencyReadBasic, planoSell, pagamentoReceive, avaliacaoFisicaSchedule)));
+        recepcionistaRole.setPermissions(new HashSet<>(Arrays.asList(alunoCreate, alunoUpdate, alunoReadAll, checkinCreate,
+                catracaManage, aulaSchedule, reportFrequencyReadBasic, planoSell, pagamentoReceive, avaliacaoFisicaSchedule, addressCreate, addressRead, addressRead, memberhsipRead)));
 
         RoleEntity coordenadorRole = new RoleEntity();
         coordenadorRole.setName("ROLE_COORDENADOR");
         coordenadorRole.setDescription("Coordenador / Gerente da academia");
-        coordenadorRole.setPermissions(new HashSet<>(Arrays.asList(contratoDiscountApprove, contratoUpdate, inadimplenciaRead, inadimplenciaNotify, reportVendasRead, reportFrequencyReadFull, funcionarioHorarioManage)));
+        coordenadorRole.setPermissions(new HashSet<>(Arrays.asList(contratoDiscountApprove, contratoUpdate, inadimplenciaRead, inadimplenciaNotify, reportVendasRead, reportFrequencyReadFull,
+                funcionarioHorarioManage, addressCreate, addressRead, addressRead, alunoCreate, alunoUpdate, alunoReadAll, userManageStaff, manageMembership, memberhsipRead)));
 
         RoleEntity instrutorRole = new RoleEntity();
         instrutorRole.setName("ROLE_INSTRUTOR");
         instrutorRole.setDescription("Instrutor / Personal Trainer");
-        instrutorRole.setPermissions(new HashSet<>(Arrays.asList(treinoCreate, treinoUpdate, presencaManage, alunoHistoricoRead, avaliacaoFisicaSchedule)));
+        instrutorRole.setPermissions(new HashSet<>(Arrays.asList(treinoCreate, treinoUpdate, presencaManage, alunoHistoricoRead, avaliacaoFisicaSchedule, treinoDelete,
+                exercicioCreate, exercicioRead, exercicioUpdate, exercicioDelete, atributosCreate, atributosRead,
+                atributosUpdate, atributosDelete)));
 
         RoleEntity financeiroRole = new RoleEntity();
         financeiroRole.setName("ROLE_FINANCEIRO");

@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,17 +26,20 @@ public class ExerciseCategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ATRIBUTO_CREATE')")
     public ExerciseCategoryEntity createExerciseCategory(@RequestBody @Valid ExerciseCategoryDto exerciseCategoryDto){
         var createdExerciseCategory = exerciseCategoryService.createExerciseCategory(exerciseCategoryDto);
         return createdExerciseCategory;
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ATRIBUTO_READ')")
     public List<ExerciseCategoryEntity> getAllExerciseCategories(){
         return exerciseCategoryService.getAllExerciseCategories();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ATRIBUTO_READ')")
     public ResponseEntity<Object> getExerciseCategoryById (@PathVariable(value = "id")UUID id) {
         try {
             var exerciseCategory = exerciseCategoryService.findExerciseCategoryById(id);
@@ -46,6 +50,7 @@ public class ExerciseCategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ATRIBUTO_UPDATE')")
     public ResponseEntity<Object> updateExerciseCategory(@PathVariable UUID id,
                                                   @RequestBody @Valid ExerciseCategoryDto exerciseCategoryDto){
         try{
@@ -57,6 +62,7 @@ public class ExerciseCategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ATRIBUTO_DELETE')")
     public ResponseEntity<Object> deleteExercise(@PathVariable UUID id){
         try{
             exerciseCategoryService.deleteExerciseCategory(id);

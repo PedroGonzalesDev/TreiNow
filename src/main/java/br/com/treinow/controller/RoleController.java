@@ -40,12 +40,13 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('ROLE_MANAGE')")
     public ResponseEntity<RoleResponseDto> findRoleById(@PathVariable(value = "id")UUID id) {
         return roleService.findRoleById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_MANAGE')")
     public ResponseEntity<Object> updateRole(@PathVariable UUID id,
                                              @RequestBody @Valid RoleDto roleDto){
         try{
