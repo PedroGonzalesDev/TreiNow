@@ -13,5 +13,5 @@ public interface MembershipMapper {
 
     MembershipResponseDto toMembershipResponseDto(MembershipEntity membershipEntity);
 
-    List<MemberResponseDto> toMembershipResponseDtoLit(List<MembershipEntity> membershipEntity);
+    List<MembershipResponseDto> toMembershipResponseDtoLit(List<MembershipEntity> membershipEntity);
 }

@@ -1,8 +1,10 @@
 package br.com.treinow.service;
 
 import br.com.treinow.dtos.MembershipDto;
+import br.com.treinow.mapper.MembershipMapper;
 import br.com.treinow.models.entities.MembershipEntity;
 import br.com.treinow.repositories.jpa.MembershipRepository;
+import br.com.treinow.responsedto.MembershipResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +18,25 @@ public class MembershipService {
 
     @Autowired
     private MembershipRepository membershipRepository;
+    @Autowired
+    private MembershipMapper membershipMapper;
 
-    public MembershipEntity createMembership(@Valid MembershipDto membershipDto){
+    public MembershipResponseDto createMembership(@Valid MembershipDto membershipDto){
         MembershipEntity membershipEntity = new MembershipEntity();
         BeanUtils.copyProperties(membershipDto, membershipEntity);
-        return membershipRepository.save(membershipEntity);
+        MembershipEntity createdMembership = membershipRepository.save(membershipEntity);
+        return membershipMapper.toMembershipResponseDto(createdMembership);
     }
 
-    public List<MembershipEntity> getAllMembership(){
-        return membershipRepository.findAll();
+    public List<MembershipResponseDto> getAllMembership(){
+        return membershipMapper.toMembershipResponseDtoLit(membershipRepository.findAll());
     }
 
-    public MembershipEntity updateMembership(UUID id, @Valid MembershipDto membershipDto){
-        var membership = membershipRepository.findById(id).orElseThrow();
+    public MembershipResponseDto updateMembership(UUID id, @Valid MembershipDto membershipDto){
+        MembershipEntity membership = membershipRepository.findById(id).orElseThrow(() -> new RuntimeException("Membership not found"));
         BeanUtils.copyProperties(membershipDto, membership, "id");
-        return membershipRepository.save(membership);
+        MembershipEntity updatedMembership = membershipRepository.save(membership);
+        return membershipMapper.toMembershipResponseDto(updatedMembership);
     }
 
     public void deleteMembership(UUID id){

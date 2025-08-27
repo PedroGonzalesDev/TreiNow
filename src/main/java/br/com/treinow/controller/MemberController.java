@@ -27,10 +27,11 @@ public class MemberController {
     private MemberMapper memberMapper;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ALUNO_CREATE')")//Metodo post - cria membro
-    public ResponseEntity<MemberResponseDto> createMember(@RequestBody @Valid MemberDto memberDto){
+    public MemberResponseDto createMember(@RequestBody @Valid MemberDto memberDto){
         var createdMember = memberService.createMember(memberDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdMember);
+        return createdMember;
     }
 
     @GetMapping
