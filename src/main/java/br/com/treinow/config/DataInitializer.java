@@ -65,7 +65,7 @@ public class DataInitializer implements CommandLineRunner {
         // -- Gerenciamento dos planos da academia
         PermissionEntity manageMembership = new PermissionEntity();
         manageMembership.setName("MANAGE_MEMBERSHIP");
-        manageMembership.setName("Permite criar, atualizar planos da academia");
+        manageMembership.setDescription("Permite criar, atualizar planos da academia");
 
         PermissionEntity memberhsipRead = new PermissionEntity();
         memberhsipRead.setName("MEMBERSHIP_READ");
@@ -118,7 +118,7 @@ public class DataInitializer implements CommandLineRunner {
 
         PermissionEntity atributosRead = new PermissionEntity();
         atributosRead.setName("ATRIBUTOS_READ");
-        atributosCreate.setName("Permite verificar todos os grupos musculares e categorias já criados");
+        atributosCreate.setDescription("Permite verificar todos os grupos musculares e categorias já criados");
 
         PermissionEntity atributosUpdate = new PermissionEntity();
         atributosUpdate.setName("ATRIBUTOS_UPDATE");

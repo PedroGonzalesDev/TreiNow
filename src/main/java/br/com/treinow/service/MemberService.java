@@ -1,9 +1,11 @@
 package br.com.treinow.service;
 
 import br.com.treinow.dtos.MemberDto;
+import br.com.treinow.mapper.MemberMapper;
 import br.com.treinow.models.entities.MemberEntity;
 import br.com.treinow.models.entities.UserEntity;
 import br.com.treinow.repositories.jpa.MemberRepository;
+import br.com.treinow.responsedto.MemberResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +21,30 @@ public class MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private MemberMapper memberMapper;
 
     //Regra de negocio metodo post
-    public MemberEntity createMember(@Valid MemberDto memberDto) {
+    public MemberResponseDto createMember(MemberDto memberDto) {
         MemberEntity memberEntity = new MemberEntity();
         BeanUtils.copyProperties(memberDto, memberEntity);
-        return memberRepository.save(memberEntity);
+        MemberEntity savedMember = memberRepository.save(memberEntity);
+        return memberMapper.toMemberResponseDto(savedMember);
     }
 
-    public List<MemberEntity> getAllMembers(){
-        return memberRepository.findAll();
+    public List<MemberResponseDto> getAllMembers(){
+        return memberMapper.toMemberResponseDtoList(memberRepository.findAll());
     }
 
-    public Optional<MemberEntity> findById(UUID id){
-        return memberRepository.findById(id);
+    public Optional<MemberResponseDto> findById(UUID id){
+        return memberRepository.findById(id).map(memberMapper::toMemberResponseDto);
     }
 
-    public MemberEntity updateMember(UUID id, @Valid MemberDto memberDto){
-        var member = memberRepository.findById(id).orElseThrow();
+    public MemberResponseDto updateMember(UUID id, @Valid MemberDto memberDto){
+        var member = memberRepository.findById(id).orElseThrow(()-> new RuntimeException("Member not found"));
         BeanUtils.copyProperties(memberDto, member, "id");
-        return memberRepository.save(member);
+        var updatedMember = memberRepository.save(member);
+        return memberMapper.toMemberResponseDto(updatedMember);
     }
 
     public void deleteMember (UUID id){

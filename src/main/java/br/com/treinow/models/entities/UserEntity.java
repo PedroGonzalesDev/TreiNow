@@ -13,10 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -50,13 +47,18 @@ public class UserEntity implements UserDetails {
     private Boolean isActive = true;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(){
-        if (this.role == null || this.role.getPermissions() == null){
-            return Collections.emptySet();
-        }
-        return this.role.getPermissions().stream()
-                .map(permission -> new SimpleGrantedAuthority(permission.getName()))
-                .collect(Collectors.toSet());
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+
+        authorities.add(new SimpleGrantedAuthority(this.role.getName()));
+
+        authorities.addAll(
+                this.role.getPermissions().stream()
+                        .map(permission -> new SimpleGrantedAuthority(permission.getName()))
+                        .collect(Collectors.toList())
+
+        );
+        return authorities;
     }
 
     @Override

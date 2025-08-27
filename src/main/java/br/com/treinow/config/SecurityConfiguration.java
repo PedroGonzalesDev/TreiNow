@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/users").permitAll() //Para cadastro de usuario
                         .requestMatchers(HttpMethod.GET, "/users/me").authenticated()
                         .requestMatchers("/roles/**").hasAuthority("ROLE_MANAGE")
+                        .requestMatchers("/users/members/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter,UsernamePasswordAuthenticationFilter.class)
