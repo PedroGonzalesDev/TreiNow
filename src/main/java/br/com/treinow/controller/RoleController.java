@@ -25,9 +25,9 @@ public class RoleController {
     private RoleMapper roleMapper;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_MANAGE')")
     @ResponseStatus(HttpStatus.CREATED)
-    public RoleEntity createRole (@RequestBody @Valid RoleDto roleDto){
+    @PreAuthorize("hasAuthority('ROLE_MANAGE')")
+    public RoleResponseDto createRole (@RequestBody @Valid RoleDto roleDto){
         var createdRole = roleService.createRole(roleDto);
         return createdRole;
     }
@@ -47,13 +47,13 @@ public class RoleController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_MANAGE')")
-    public ResponseEntity<Object> updateRole(@PathVariable UUID id,
+    public ResponseEntity<RoleResponseDto> updateRole(@PathVariable UUID id,
                                              @RequestBody @Valid RoleDto roleDto){
         try{
-            var role = roleService.updateRole(id, roleDto);
-            return ResponseEntity.status(HttpStatus.OK).body(role);
+            RoleResponseDto roleUpdated = roleService.updateRole(id, roleDto);
+            return ResponseEntity.ok(roleUpdated);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role not found please verify the id");
+            return ResponseEntity.notFound().build();
         }
     }
 

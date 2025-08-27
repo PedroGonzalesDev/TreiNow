@@ -13,10 +13,14 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MemberEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID userId;
-    private UUID membershipId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "membership_id")
+    private MembershipEntity membershipEntity;
     private String payment;
     private String gender;
     private String weight;

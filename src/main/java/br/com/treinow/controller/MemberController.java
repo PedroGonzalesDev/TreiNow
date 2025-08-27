@@ -2,7 +2,10 @@ package br.com.treinow.controller;
 
 
 import br.com.treinow.dtos.MemberDto;
+import br.com.treinow.mapper.MemberMapper;
 import br.com.treinow.models.entities.MemberEntity;
+import br.com.treinow.responsedto.MemberResponseDto;
+import br.com.treinow.responsedto.RoleResponseDto;
 import br.com.treinow.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,36 +23,38 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private MemberMapper memberMapper;
 
     @PostMapping
     @PreAuthorize("hasAuthority('ALUNO_CREATE')")//Metodo post - cria membro
-    public ResponseEntity<MemberEntity> createMember(@RequestBody @Valid MemberDto memberDto){
+    public ResponseEntity<MemberResponseDto> createMember(@RequestBody @Valid MemberDto memberDto){
         var createdMember = memberService.createMember(memberDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMember);
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('ALUNO_READ_ALL')")//Metodo get, puxa todos os membros
-    public ResponseEntity<List<MemberEntity>> getAllMembers(){
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.getAllMembers());
+    public ResponseEntity<List<MemberResponseDto>> getAllMembers(){
+        List<MemberResponseDto> members = memberService.getAllMembers();
+        return ResponseEntity.ok(members);
     }
 
     @GetMapping("/{id}") //Puxa membro pelo id
     @PreAuthorize("hasAuthority('ALUNO_READ_ALL')")
-    public ResponseEntity<Object> getMemberById(@PathVariable(value = "id") UUID id){
-        return memberService.findById(id).<ResponseEntity<Object>>map(ResponseEntity::ok).
-                orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found"));
+    public ResponseEntity<MemberResponseDto> getMemberById(@PathVariable(value = "id") UUID id){
+        return memberService.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}") //Atualiza dados da entidade membro
     @PreAuthorize("hasAuthority('ALUNO_UPDATE')")
-    public ResponseEntity<Object> updateMember(@PathVariable UUID id,
+    public ResponseEntity<MemberResponseDto> updateMember(@PathVariable UUID id,
                                              @RequestBody @Valid MemberDto memberDto) {
         try {
-            var memberUpdated = memberService.updateMember(id, memberDto);
-            return ResponseEntity.status(HttpStatus.OK).body(memberUpdated);
+            MemberResponseDto memberUpdated = memberService.updateMember(id, memberDto);
+            return ResponseEntity.ok(memberUpdated);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found");
+            return ResponseEntity.notFound().build();
         }
     }
     @DeleteMapping("/{id}") //Deleta membro por id

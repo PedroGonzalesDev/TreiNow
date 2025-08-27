@@ -22,10 +22,11 @@ public class RoleService {
     @Autowired
     private RoleMapper roleMapper;
 
-    public RoleEntity createRole (@Valid RoleDto roleDto){
+    public RoleResponseDto createRole (RoleDto roleDto){
         var roleEntity = new RoleEntity();
         BeanUtils.copyProperties(roleDto, roleEntity);
-        return roleRepository.save(roleEntity);
+        RoleEntity savedRole = roleRepository.save(roleEntity);
+        return roleMapper.toRoleResponseDto(savedRole);
     }
 
     public List<RoleResponseDto> getAllRoles(){
@@ -36,10 +37,12 @@ public class RoleService {
         return roleRepository.findById(id).map(roleMapper::toRoleResponseDto);
     }
 
-    public RoleEntity updateRole (UUID id, @Valid RoleDto roleDto){
-        var role = roleRepository.findById(id).orElseThrow();
+    public RoleResponseDto updateRole (UUID id, @Valid RoleDto roleDto){
+        var role = roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Role not found"));
         BeanUtils.copyProperties(roleDto, role, "id");
-        return roleRepository.save(role);
+
+        RoleEntity updatedRole = roleRepository.save(role);
+        return roleMapper.toRoleResponseDto(updatedRole);
     }
 
     public void deleteRole(UUID id){

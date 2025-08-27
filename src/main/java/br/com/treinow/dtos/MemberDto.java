@@ -5,9 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 public record MemberDto(
-    UUID userId,
-    @NotNull(message = "Membership cannot be null")
-    UUID membershipId,
     @NotNull(message = "Payment cannot be null")
     String payment,
     @NotNull(message = "Gender cannot be null")
