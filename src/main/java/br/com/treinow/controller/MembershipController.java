@@ -2,6 +2,7 @@ package br.com.treinow.controller;
 
 import br.com.treinow.dtos.MembershipDto;
 import br.com.treinow.models.entities.MembershipEntity;
+import br.com.treinow.responsedto.MembershipResponseDto;
 import br.com.treinow.service.MembershipService;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
@@ -25,7 +26,7 @@ public class MembershipController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('MANAGE_MEMBERSHIP')")
-    public MembershipEntity createMembership(@RequestBody @Valid MembershipDto membershipDto){
+    public MembershipResponseDto createMembership(@RequestBody @Valid MembershipDto membershipDto){
         var createdMembership= membershipService.createMembership(membershipDto);
         return createdMembership;
     }
@@ -33,19 +34,20 @@ public class MembershipController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('MEMBERSHIP_READ')")
-    public List<MembershipEntity> getAllMembership(){
-        return membershipService.getAllMembership();
+    public ResponseEntity<List<MembershipResponseDto>> getAllMembership(){
+        List<MembershipResponseDto> memberships = membershipService.getAllMembership();
+        return ResponseEntity.ok(memberships);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('MANAGE_MEMBERSHIP')")
-    public ResponseEntity<Object> updateMembership(@PathVariable UUID id,
+    public ResponseEntity<MembershipResponseDto> updateMembership(@PathVariable UUID id,
                                                    @RequestBody @Valid MembershipDto membershipDto){
         try{
             var membershipUpdated = membershipService.updateMembership(id, membershipDto);
-            return ResponseEntity.status(HttpStatus.OK).body(membershipUpdated);
+            return ResponseEntity.ok(membershipUpdated);
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Membership not found verify id");
+            return ResponseEntity.notFound().build();
         }
     }
 
