@@ -25,7 +25,7 @@ public class MembershipController {
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('MANAGE_MEMBERSHIP')")
+//    @PreAuthorize("hasAuthority('MANAGE_MEMBERSHIP')")
     public MembershipResponseDto createMembership(@RequestBody @Valid MembershipDto membershipDto){
         var createdMembership= membershipService.createMembership(membershipDto);
         return createdMembership;
@@ -33,7 +33,7 @@ public class MembershipController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('MEMBERSHIP_READ')")
+//    @PreAuthorize("hasAuthority('MEMBERSHIP_READ')")
     public ResponseEntity<List<MembershipResponseDto>> getAllMembership(){
         List<MembershipResponseDto> memberships = membershipService.getAllMembership();
         return ResponseEntity.ok(memberships);
@@ -56,7 +56,7 @@ public class MembershipController {
     public ResponseEntity<Object> deleteMembership(@PathVariable UUID id){
         try{
             membershipService.deleteMembership(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Membership delete sucessfully");
+            return ResponseEntity.status(HttpStatus.OK).body("Membership delete successfully");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Membership not found verify id");
         }

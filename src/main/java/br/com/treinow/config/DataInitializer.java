@@ -67,9 +67,9 @@ public class DataInitializer implements CommandLineRunner {
         manageMembership.setName("MANAGE_MEMBERSHIP");
         manageMembership.setDescription("Permite criar, atualizar planos da academia");
 
-        PermissionEntity memberhsipRead = new PermissionEntity();
-        memberhsipRead.setName("MEMBERSHIP_READ");
-        memberhsipRead.setDescription("Permite listar todos os planos da academia");
+        PermissionEntity membershipRead = new PermissionEntity();
+        membershipRead.setName("MEMBERSHIP_READ");
+        membershipRead.setDescription("Permite listar todos os planos da academia");
 
         // -- Gerenciamento de tabelas de treino
         PermissionEntity treinoCreate = new PermissionEntity();
@@ -224,7 +224,7 @@ public class DataInitializer implements CommandLineRunner {
                 financeiroConciliar, reportFrequencyReadBasic, reportFrequencyReadFull, reportVendasRead,
                 reportFaturamentoRead, funcionarioHorarioManage, roleManage, userManageStaff, treinoDelete,
                 exercicioCreate, exercicioRead, exercicioUpdate, exercicioDelete, atributosCreate, atributosRead,
-                atributosUpdate, atributosDelete, addressCreate, addressRead, addressRead, manageMembership, memberhsipRead
+                atributosUpdate, atributosDelete, addressCreate, addressRead, addressRead, manageMembership, membershipRead
         );
         permissionRepository.saveAll(allPermissions);
 
@@ -238,13 +238,13 @@ public class DataInitializer implements CommandLineRunner {
         recepcionistaRole.setName("ROLE_RECEPCIONISTA");
         recepcionistaRole.setDescription("Recepcionista / Atendente da academia");
         recepcionistaRole.setPermissions(new HashSet<>(Arrays.asList(alunoCreate, alunoUpdate, alunoReadAll, checkinCreate,
-                catracaManage, aulaSchedule, reportFrequencyReadBasic, planoSell, pagamentoReceive, avaliacaoFisicaSchedule, addressCreate, addressRead, addressRead, memberhsipRead)));
+                catracaManage, aulaSchedule, reportFrequencyReadBasic, planoSell, pagamentoReceive, avaliacaoFisicaSchedule, addressCreate, addressRead, addressRead, membershipRead)));
 
         RoleEntity coordenadorRole = new RoleEntity();
         coordenadorRole.setName("ROLE_COORDENADOR");
         coordenadorRole.setDescription("Coordenador / Gerente da academia");
         coordenadorRole.setPermissions(new HashSet<>(Arrays.asList(contratoDiscountApprove, contratoUpdate, inadimplenciaRead, inadimplenciaNotify, reportVendasRead, reportFrequencyReadFull,
-                funcionarioHorarioManage, addressCreate, addressRead, addressRead, alunoCreate, alunoUpdate, alunoReadAll, userManageStaff, manageMembership, memberhsipRead)));
+                funcionarioHorarioManage, addressCreate, addressRead, addressRead, alunoCreate, alunoUpdate, alunoReadAll, userManageStaff, manageMembership, membershipRead)));
 
         RoleEntity instrutorRole = new RoleEntity();
         instrutorRole.setName("ROLE_INSTRUTOR");

@@ -1,10 +1,13 @@
 package br.com.treinow.models.entities;
 
+import br.com.treinow.models.entities.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
@@ -16,10 +19,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
 public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,8 +47,12 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
     private LocalDateTime lastLogin;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private UserStatus status;
+    private String activationToken; //Token para ativar a conta / definir a senha
+    private LocalDateTime tokenExpiryDate; //Data de expiração do token
+    private boolean  forcePasswordChange; //Forçar a troca no primeiro login
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,8 +86,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isEnabled(){
-        return this.isActive; //Habilita se o campo isActive for true
+        return this.status == UserStatus.ACTIVE; //Habilita se o campo isActive for true
     }
-
 
 }

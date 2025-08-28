@@ -8,6 +8,7 @@ import java.util.UUID;
 public record MembershipDto(
         @NotBlank(message = "Name cannot be blank")
         String name,
+        String description,
         @NotBlank(message = "Duration type is required")
         String durationType,
         @NotNull(message = "Insert the duration to continue")
