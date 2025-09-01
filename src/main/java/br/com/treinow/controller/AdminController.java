@@ -22,14 +22,14 @@ public class AdminController {
     private UserService userService;
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDto> createUserByAdmin (@Valid @RequestBody AdminsUserCreateDto dto){
         UserResponseDto createdUser = userService.createUserByAdmin(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PostMapping("/{userId}/role")
-//    @PreAuthorize("hasAuthority('USER_MANAGE_STAFF')")
+    @PreAuthorize("hasAuthority('USER_MANAGE_STAFF')")
     public ResponseEntity<UserResponseDto> updateUserRole(@PathVariable UUID userId,
                                                           @Valid @RequestBody UserRoleUpdateDto dto){
         UserResponseDto updatedUser = userService.updateUserRole(userId, dto);
