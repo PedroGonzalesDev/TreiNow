@@ -13,9 +13,12 @@ import br.com.treinow.responsedto.UserResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -120,6 +123,18 @@ public class UserService {
     public void deleteUser (UUID id){
         var user = userRepository.findById(id).orElseThrow();
         userRepository.delete(user);
+    }
+
+    @Transactional
+    public void updateUserLastLogin(String email) {
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o e-mail: " + email));
+
+        user.setLastLogin(LocalDateTime.now());
+
+        // Como o mét0do é @Transactional, o Hibernate salva a alteração automaticamente no final.
+        // Mas para ser explícito, podemos adicionar o save:
+        userRepository.save(user);
     }
 
 }
