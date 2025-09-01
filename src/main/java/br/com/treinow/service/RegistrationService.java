@@ -2,10 +2,7 @@ package br.com.treinow.service;
 
 import br.com.treinow.dtos.CreateMemberDto;
 import br.com.treinow.exceptions.BusinessException;
-import br.com.treinow.models.entities.MemberEntity;
-import br.com.treinow.models.entities.MembershipEntity;
-import br.com.treinow.models.entities.RoleEntity;
-import br.com.treinow.models.entities.UserEntity;
+import br.com.treinow.models.entities.*;
 import br.com.treinow.models.entities.enums.UserStatus;
 import br.com.treinow.repositories.jpa.*;
 import jakarta.transaction.Transactional;
@@ -41,9 +38,19 @@ public class RegistrationService {
         UserEntity newUser = new UserEntity();
         newUser.setName(createMemberDto.userInfoDto().name());
         newUser.setEmail(createMemberDto.userInfoDto().email());
+        newUser.setCpf(createMemberDto.userInfoDto().cpf());
+        newUser.setPhone(createMemberDto.userInfoDto().phone());
         newUser.setPassword(passwordEncoder.encode(temporaryPassword));
         newUser.setStatus(UserStatus.ACTIVE);
         newUser.setForcePasswordChange(true);
+        AddressEntity address = new AddressEntity();
+        address.setStreet(createMemberDto.addressInfoDto().street());
+        address.setNumber(createMemberDto.addressInfoDto().number());
+        address.setComplement(createMemberDto.addressInfoDto().complement());
+        address.setCity(createMemberDto.addressInfoDto().city());
+        address.setState(createMemberDto.addressInfoDto().state());
+        address.setZipCode(createMemberDto.addressInfoDto().zipCode());
+        newUser.setAddress(address);
         RoleEntity alunoRole = roleRepository.findByName("ROLE_ALUNO")
                 .orElseThrow(() -> new RuntimeException("Erro crítico: A Role 'ROLE_ALUNO' não foi encontrada no banco. Verifique o DataInitializer."));
         newUser.setRole(alunoRole);
@@ -65,10 +72,20 @@ public class RegistrationService {
         UserEntity newUser = new UserEntity();
         newUser.setName(createMemberDto.userInfoDto().name());
         newUser.setEmail(createMemberDto.userInfoDto().email());
+        newUser.setCpf(createMemberDto.userInfoDto().cpf());
+        newUser.setPhone(createMemberDto.userInfoDto().phone());
         newUser.setPassword(null);
         newUser.setStatus(UserStatus.PENDING_SETUP);
         newUser.setActivationToken(activationToken);
         newUser.setTokenExpiryDate(LocalDateTime.now().plusHours(24));
+        AddressEntity address = new AddressEntity();
+        address.setStreet(createMemberDto.addressInfoDto().street());
+        address.setNumber(createMemberDto.addressInfoDto().number());
+        address.setComplement(createMemberDto.addressInfoDto().complement());
+        address.setCity(createMemberDto.addressInfoDto().city());
+        address.setState(createMemberDto.addressInfoDto().state());
+        address.setZipCode(createMemberDto.addressInfoDto().zipCode());
+        newUser.setAddress(address);
 
         RoleEntity alunoRole = roleRepository.findByName("ROLE_ALUNO")
                 .orElseThrow(() -> new RuntimeException("Erro crítico: A Role 'ROLE_ALUNO' não foi encontrada no banco. Verifique o DataInitializer."));

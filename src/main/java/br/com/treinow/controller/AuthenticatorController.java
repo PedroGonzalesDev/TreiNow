@@ -7,6 +7,7 @@ import br.com.treinow.models.entities.UserEntity;
 import br.com.treinow.security.TokenService;
 import br.com.treinow.service.MemberAccountService;
 import br.com.treinow.service.RegistrationService;
+import br.com.treinow.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -31,6 +32,7 @@ public class AuthenticatorController {
     @Autowired private TokenService tokenService;
     @Autowired private RegistrationService registrationService;
     @Autowired private MemberAccountService memberAccountService;
+    @Autowired private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid LoginDto loginDto){
@@ -38,6 +40,9 @@ public class AuthenticatorController {
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
         var token = tokenService.generateToken((UserEntity) auth.getPrincipal());
+
+        UserEntity user = (UserEntity) auth.getPrincipal();
+        userService.updateUserLastLogin(user.getEmail());
 
         return ResponseEntity.ok(token);
     }
