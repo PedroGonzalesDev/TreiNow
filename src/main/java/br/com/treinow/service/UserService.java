@@ -5,6 +5,7 @@ import br.com.treinow.mapper.UserMapper;
 import br.com.treinow.models.entities.AddressEntity;
 import br.com.treinow.models.entities.RoleEntity;
 import br.com.treinow.models.entities.UserEntity;
+import br.com.treinow.models.entities.enums.UserStatus;
 import br.com.treinow.repositories.jpa.AddressRepository;
 import br.com.treinow.repositories.jpa.RoleRepository;
 import br.com.treinow.repositories.jpa.UserRepository;
@@ -36,8 +37,8 @@ public class UserService {
     //Regra de negocio metodo POST - cria usuario
     public UserResponseDto createUser(UserDto userDto){
         var userEntity = new UserEntity();
+        userEntity.setStatus(UserStatus.ACTIVE);
         BeanUtils.copyProperties(userDto, userEntity);
-        if (userEntity .getIsActive() == null) { userEntity.setIsActive(true);}
 
         String encryptedPassword = passwordEncoder.encode(userDto.password());
         userEntity.setPassword(encryptedPassword);

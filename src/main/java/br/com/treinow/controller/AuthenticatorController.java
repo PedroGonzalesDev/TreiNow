@@ -1,8 +1,12 @@
 package br.com.treinow.controller;
 
+import br.com.treinow.dtos.CreateMemberDto;
 import br.com.treinow.dtos.LoginDto;
+import br.com.treinow.dtos.SetPasswordDto;
 import br.com.treinow.models.entities.UserEntity;
 import br.com.treinow.security.TokenService;
+import br.com.treinow.service.MemberAccountService;
+import br.com.treinow.service.RegistrationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -23,11 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthenticatorController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private TokenService tokenService;
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private TokenService tokenService;
+    @Autowired private RegistrationService registrationService;
+    @Autowired private MemberAccountService memberAccountService;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid LoginDto loginDto){
@@ -39,8 +42,19 @@ public class AuthenticatorController {
         return ResponseEntity.ok(token);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<Void> selfRegister(@Valid @RequestBody CreateMemberDto createMemberDto){
+        registrationService.selfRegister(createMemberDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/set-password")
+    public ResponseEntity<Void> setPassword(@Valid @RequestBody SetPasswordDto setPasswordDto) {
+        memberAccountService.setInitialPassword(setPasswordDto.token(), setPasswordDto.newPassword());
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/logout")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null){

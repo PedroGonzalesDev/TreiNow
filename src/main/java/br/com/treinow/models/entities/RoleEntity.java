@@ -3,6 +3,7 @@ package br.com.treinow.models.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -28,5 +29,23 @@ public class RoleEntity {
     )
 
     private Set<PermissionEntity> permissions;
+
+    public RoleEntity(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.permissions = new HashSet<>(); // Garante que a coleção nunca será nula
+    }
+
+    public void addPermission(PermissionEntity permission) {
+        if (this.permissions == null) {
+            this.permissions = new HashSet<>();
+        }
+        this.permissions.add(permission);
+
+        if (permission.getRoles() == null) {
+            permission.setRoles(new HashSet<>());
+        }
+        permission.getRoles().add(this);
+    }
 
 }

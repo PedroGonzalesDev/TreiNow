@@ -7,6 +7,7 @@ import br.com.treinow.models.entities.MemberEntity;
 import br.com.treinow.responsedto.MemberResponseDto;
 import br.com.treinow.responsedto.RoleResponseDto;
 import br.com.treinow.service.MemberService;
+import br.com.treinow.service.RegistrationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

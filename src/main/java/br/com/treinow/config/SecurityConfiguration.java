@@ -36,7 +36,12 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/users").permitAll() //Para cadastro de usuario
                         .requestMatchers(HttpMethod.GET, "/users/me").authenticated()
                         .requestMatchers("/roles/**").hasAuthority("ROLE_MANAGE")
+                        .requestMatchers("/api/admin/users").permitAll() //hasRole("ADMIN") //Temporario para cadastro de admin com banco limpo
+                        .requestMatchers("/api/admin/users/**").permitAll()
                         .requestMatchers("/users/members/**").authenticated()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/membership/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter,UsernamePasswordAuthenticationFilter.class)
