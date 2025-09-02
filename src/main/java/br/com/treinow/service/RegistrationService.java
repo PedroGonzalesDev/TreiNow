@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -99,11 +100,33 @@ public class RegistrationService {
     }
 
     private void createAndSaveMember(CreateMemberDto createMemberDto, UserEntity userEntity){
-        MembershipEntity plan = membershipRepository.findById(createMemberDto.membershipId()).orElseThrow();
-        MemberEntity newMember = new MemberEntity();
-        newMember.setUserEntity(userEntity);
-        newMember.setMembershipEntity(plan);
-        memberRepository.save(newMember);
+        if(createMemberDto.membershipId() != null) {
+            MembershipEntity plan = membershipRepository.findById(createMemberDto.membershipId())
+                    .orElseThrow(() -> new RuntimeException("Plan not found"));
+
+            LocalDate startDate = LocalDate.now();
+            LocalDate endDate = calculateEndDate(startDate, plan);
+
+            MemberEntity newMember = new MemberEntity();
+            newMember.setUserEntity(userEntity);
+            newMember.setMembershipEntity(plan);
+            newMember.setPayment(createMemberDto.payment());
+            newMember.setSubscriptionStartDate(String.valueOf(startDate));
+            newMember.setSubscriptionEndDate(String.valueOf(endDate));
+            memberRepository.save(newMember);
+        }
+    }
+
+    private LocalDate calculateEndDate(LocalDate startDate, MembershipEntity plan){
+        String unit = plan.getDurationType().toLowerCase();
+        Long value = plan.getDuration();
+
+        return switch (unit) {
+            case "dias" -> startDate.plusDays(value);
+            case "meses" -> startDate.plusMonths(value);
+            case "anos" -> startDate.plusYears(value);
+            default -> startDate.plusMonths(1); //Plano padrão 1 meses
+        };
     }
 
 

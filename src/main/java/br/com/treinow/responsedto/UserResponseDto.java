@@ -10,7 +10,10 @@ public record UserResponseDto (
     String name,
     String email,
     String phone,
-    RoleDto roleDto
+    RoleDto roleDto,
+    Boolean isActive,
+    String createdAt,
+    String lastLogin
 
 ){}
 

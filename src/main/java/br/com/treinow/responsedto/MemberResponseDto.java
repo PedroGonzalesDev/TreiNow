@@ -6,7 +6,11 @@ import java.util.UUID;
 public record MemberResponseDto(
     UUID id,
     UUID userId,
-    Long membershipId
+    String name,
+    UUID membershipId,
+    String payment,
+    String subscriptionStartDate,
+    String subscriptionEndDate
 )
 {}
 
