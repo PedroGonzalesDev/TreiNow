@@ -9,7 +9,6 @@ public record MemberDto(
     String payment,
     @NotNull(message = "Gender cannot be null")
     String gender,
-    String state,
     String weight,
     String height,
     @NotNull(message = "Must contain the subscription start date")

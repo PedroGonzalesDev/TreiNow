@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {RoleMapper.class})
 public interface UserMapper {
 
+    @Mapping(target = "isActive", expression = "java(userEntity.getStatus() == br.com.treinow.models.entities.enums.UserStatus.ACTIVE)")
     @Mapping(source = "role", target = "roleDto")
     UserResponseDto toUserResponseDto(UserEntity userEntity);
 

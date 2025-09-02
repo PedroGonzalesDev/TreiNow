@@ -25,7 +25,6 @@ public class MemberEntity {
     private String gender;
     private String weight;
     private String height;
-    private String State;
 
     //Date time in case of calculations
     private String subscriptionStartDate;
