@@ -5,6 +5,7 @@ import br.com.treinow.exceptions.BusinessException;
 import br.com.treinow.models.entities.*;
 import br.com.treinow.models.entities.enums.UserStatus;
 import br.com.treinow.repositories.jpa.*;
+import br.com.treinow.utils.SubscriptionUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,8 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static br.com.treinow.utils.SubscriptionUtils.calculateEndDate;
 
 @Service
 public class RegistrationService {
@@ -105,7 +108,7 @@ public class RegistrationService {
                     .orElseThrow(() -> new RuntimeException("Plan not found"));
 
             LocalDate startDate = LocalDate.now();
-            LocalDate endDate = calculateEndDate(startDate, plan);
+            LocalDate endDate = SubscriptionUtils.calculateEndDate(startDate, plan);
 
             MemberEntity newMember = new MemberEntity();
             newMember.setUserEntity(userEntity);
@@ -117,17 +120,7 @@ public class RegistrationService {
         }
     }
 
-    private LocalDate calculateEndDate(LocalDate startDate, MembershipEntity plan){
-        String unit = plan.getDurationType().toLowerCase();
-        Long value = plan.getDuration();
 
-        return switch (unit) {
-            case "dias" -> startDate.plusDays(value);
-            case "meses" -> startDate.plusMonths(value);
-            case "anos" -> startDate.plusYears(value);
-            default -> startDate.plusMonths(1); //Plano padrão 1 meses
-        };
-    }
 
 
     private String generateRandomPassword() {

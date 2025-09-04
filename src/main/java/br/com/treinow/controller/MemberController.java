@@ -8,6 +8,7 @@ import br.com.treinow.responsedto.MemberResponseDto;
 import br.com.treinow.responsedto.RoleResponseDto;
 import br.com.treinow.service.MemberService;
 import br.com.treinow.service.RegistrationService;
+import br.com.treinow.utils.SubscriptionUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,10 +24,9 @@ import java.util.UUID;
 @RequestMapping("/users/members")
 public class MemberController {
 
-    @Autowired
-    private MemberService memberService;
-    @Autowired
-    private MemberMapper memberMapper;
+    @Autowired private MemberService memberService;
+    @Autowired private MemberMapper memberMapper;
+    @Autowired private RegistrationService registrationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -64,7 +65,7 @@ public class MemberController {
     public ResponseEntity<Object> deleteMember(@PathVariable UUID id){
         try{
             memberService.deleteMember(id);
-            return ResponseEntity.status(HttpStatus.OK).body("Member deleted sucessfully");
+            return ResponseEntity.status(HttpStatus.OK).body("Member deleted successfully");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Member not found");
             }
