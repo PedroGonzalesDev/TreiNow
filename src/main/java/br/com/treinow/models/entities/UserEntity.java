@@ -46,6 +46,9 @@ public class UserEntity implements UserDetails {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     private LocalDateTime lastLogin;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

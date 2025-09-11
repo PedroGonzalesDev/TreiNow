@@ -43,10 +43,10 @@ public class MemberService {
         return memberRepository.findById(id).map(memberMapper::toMemberResponseDto);
     }
 
-    public MemberResponseDto updateMember(UUID id, @Valid MemberDto memberDto){
-        var member = memberRepository.findById(id).orElseThrow(()-> new RuntimeException("Member not found"));
+    public MemberResponseDto updateMember(UUID id, @Valid MemberDto memberDto) {
+        var member = memberRepository.findById(id).orElseThrow(() -> new RuntimeException("Member not found"));
         BeanUtils.copyProperties(memberDto, member, "id");
-        if (memberDto.membershipId() != null && !memberDto.membershipId().equals(member.getMembershipEntity().getId())) {
+        if (memberDto.membershipId() != null) {
 
             MembershipEntity newPlan = membershipRepository.findById(memberDto.membershipId())
                     .orElseThrow(() -> new RuntimeException("Novo plano não encontrado com o ID: " + memberDto.membershipId()));
